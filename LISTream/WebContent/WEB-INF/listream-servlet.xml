@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<bean class="com.one.controller.MyController">
-		<property name="dao" ref="com.hb.db.DAO"></property>
+		<property name="dao" ref="com.one.db.DAO"></property>
 	</bean>
 
 	<!-- 뷰리졸버 -->
