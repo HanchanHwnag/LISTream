@@ -3,9 +3,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<bean class="com.one.controller.MyController">
-		<property name="dao" ref="com.one.db.DAO"></property>
-	</bean>
+	
+	
+	<bean class="com.one.controller.MyController" autowire="byName"/>
+
 
 	<!-- 뷰리졸버 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

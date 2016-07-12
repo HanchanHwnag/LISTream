@@ -320,7 +320,6 @@ input[type="range"] {
 </head>
 <body>
 	<div class="containerPlayer">
-
 		<div id="listContainer" class="playlistContainer">
 			<ul id="playListContainer">
 				<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
@@ -329,7 +328,6 @@ input[type="range"] {
 					href="#">Bruno - When I Was Your Man</a></li>
 			</ul>
 		</div>
-
 		<div id="playerContainer">
 			<ul class="controls">
 				<li><a href="#" class="shuffle shuffleActive"
@@ -353,7 +351,6 @@ input[type="range"] {
 					max="1" step="0.1" value="0.7" />
 			</div>
 		</div>
-
 	</div>
 </body>
 </html>
