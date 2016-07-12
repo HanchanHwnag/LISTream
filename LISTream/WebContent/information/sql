@@ -1,0 +1,95 @@
+select * from member;
+
+drop table user_info;
+create table user_info(
+  user_info_code number primary key not null,
+  id varchar2(100) not null,
+  pwd varchar2(100) not null,
+  name varchar2(50) not null,
+  email varchar2(100) not null
+);
+drop sequence user_info_seq;
+create sequence user_info_seq;
+
+
+
+
+drop table genre;
+create table genre(
+  genre_code number primary key not null,
+  genre_name varchar2(50) not null
+);
+drop sequence genre_seq;
+create sequence genre_seq;
+
+drop table theme;
+create table theme(
+  theme_code number primary key,
+  theme_name varchar2(50) not null
+);
+drop sequence theme_seq;
+create sequence theme_seq;
+
+drop table music;
+create table music(
+  music_code number primary key not null,
+  singer varchar2(100) not null,
+  music_title varchar2(100) not null,
+  playtime number not null,
+  path varchar2(1000) not null,
+  hit number default 0,
+  regdate date not null,
+  genre_code number not null  
+);
+drop sequence music_seq;
+create sequence music_seq;
+
+
+drop table playlist;
+create table playlist(
+  playlist_code number primary key not null,
+  user_info_code number not null,
+  playlist_title varchar2(100) not null,
+  theme_code number not null,
+  hit number default 0,
+  regdate date
+);
+drop sequence playlist_seq;
+create sequence playlist_seq;
+
+
+drop table musiclist;
+create table musiclist(
+  musiclist_code number primary key,
+  playlist_code number not null,
+  music_code number not null
+);
+drop sequence musiclist_seq;
+create sequence musiclist_seq;
+
+drop table reply;
+create table reply(
+  reply_code number primary key not null,
+  content varchar2(300) not null,
+  user_info_code number not null,
+  playlist_code number not null,
+  regdate date 
+);
+drop sequence reply;
+create sequence reply_seq;
+
+
+drop table favorite;
+create table favorite(
+  favorite_code number primary key not null,
+  user_info_code number not null,
+  playlist_code number not null
+);
+drop sequence favorite;
+create sequence favorite;
+
+
+
+
+
+
