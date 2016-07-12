@@ -10,13 +10,13 @@
 	padding: 0px;
 	margin: 0px;
 }
-
+/* 
 body {
 	background-color: #999999;
 	font-family: SourceSansPro-Regular, Helvetica, Arial, 'sans-serif';
 	font-size: 14px;
 	line-height: 1.428571429;
-}
+} */
 
 ul, li {
 	list-style: none;
@@ -38,8 +38,8 @@ ul, li {
 	width: 70%;
 	border: 1px solid #ccc;
 	border-radius: 5px;
-	min-height: 280px;
-	max-height: 280px;
+	min-height: 100px;
+	max-height: 100px;
 	color: #fff;
 	background-color: #343434;
 	margin-top: 1rem;
@@ -290,8 +290,8 @@ input[type="range"] {
 	transition: width 0.6s ease;
 }
 </style>
-<script src="jquery-3.0.0.js"></script>
-<script src="jquery.audioControls.min.js"></script>
+<script src="../js/jquery-3.0.0.js"></script>
+<script src="../js/jquery.audioControls.min.js"></script>
 <script>
 	$(document).ready(function() {
 		$("#playListContainer").audioControls({
