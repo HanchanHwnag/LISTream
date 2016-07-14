@@ -9,7 +9,7 @@
 <script src="../js/jquery.audioControls.min.js"></script>
 <script type="text/javascript">
 	function show() {
-		document.getElementById("playbar").classList.toggle("show");
+		document.getElementById("listContainer").classList.toggle("show");
 	}
 	$(document).ready(function() {
 		$("#playListContainer").audioControls({
@@ -100,8 +100,10 @@ ul, li {
 
 /* Playlist */
 #listContainer {
-	width: 100%;
+	float:right;
+	width: 25%;
 	background-color: #fafafa;
+	position: relative;
 }
 
 #listContainer ul {
@@ -111,7 +113,7 @@ ul, li {
 }
 
 #listContainer li {
-	padding: 10px;
+	padding: 5px;
 }
 
 #listContainer li:nth-child(even) {
@@ -233,6 +235,14 @@ ul, li {
 	background: url('../images/audio/audio_icons.png') no-repeat -4px -79px;
 }
 
+.repeat {
+	background: url('../images/audio/audio_icons.png') no-repeat -4px -103px;
+	width: 21px;
+	height: 21px;
+	margin: auto;
+	margin-top: 7px;
+}
+
 .volume {
 	width: 20px;
 	height: 20px;
@@ -258,6 +268,26 @@ ul, li {
 	background-position: -34px -127px;
 }
 
+.nowplay {
+	background: url('../images/audio/list_icon_disabled.png') no-repeat;
+	background-size: 16px 16px;
+	
+	width: 24px;
+	max-width: 100%;
+    height: 24px;
+	margin: auto;
+	margin-top: 7px;
+	padding-top:5px;
+	opacity: 1;
+}
+
+.nowplay:hover, .nowplay.loopActive {
+	background: url('../images/audio/list_icon_active.png') no-repeat
+	;
+}
+
+
+
 .progress {
 	clear: both;
 	height: 4px;
@@ -279,12 +309,13 @@ ul, li {
 	float:right;
 	position: relative;
 	margin: 10px auto;
+	padding-right: 15px;
 }
 
 .volumeControl .updateProgress {
 	display: inline-block;
 	vertical-align: middle;
-	margin-top: 2px;
+	margin-top: 5px;
 }
 
 input[type="range"] {
@@ -299,8 +330,9 @@ input[type="range"] {
 	clear: both;
 	color: #00bd9b;
 	font-size: 12px;
-	padding: 5px;
+	padding: 16px;
 	float:left;
+	width:15%;
 }
 
 .audioTime {
@@ -329,14 +361,15 @@ input[type="range"] {
 	transition: width 0.6s ease;
 }
 #playListContainer{
-	max-height: 100px;
+	max-height: 224px;
 	overflow: scroll;
 }
-#playListContainer>li{
+
+#nowplay{
+	margin: 0px;
+	padding: 0px;
+	
 }
-
-
-
 
 
 
@@ -353,7 +386,7 @@ input[type="range"] {
 
 
 .show {
-	display: block;
+	display: none;
 }
 
 
@@ -362,8 +395,48 @@ input[type="range"] {
 </style>
 
 </head>
-<body>
+<body style="background-color: red;">
 	<div id="" class="rb">
+	<div id="listContainer" class="playlistContainer">
+			<ul id="playListContainer">
+				<%-- <c:forEach>
+					
+				</c:forEach> --%>
+				<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
+					href="#">Adele - Rolling In The Deep</a></li>
+				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
+					href="#">Bruno - When I Was Your Man</a></li>
+					<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
+					href="#">Adele - Rolling In The Deep</a></li>
+				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
+					href="#">Bruno - When I Was Your Man</a></li>
+					<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
+					href="#">Adele - Rolling In The Deep</a></li>
+				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
+					href="#">Bruno - When I Was Your Man</a></li>
+					<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
+					href="#">Adele - Rolling In The Deep</a></li>
+				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
+					href="#">Bruno - When I Was Your Man</a></li>
+					<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
+					href="#">Adele - Rolling In The Deep</a></li>
+				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
+					href="#">Bruno - When I Was Your Man</a></li>
+					<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
+					href="#">Adele - Rolling In The Deep</a></li>
+				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
+					href="#">Bruno - When I Was Your Man</a></li>
+					<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
+					href="#">Adele - Rolling In The Deep</a></li>
+				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
+					href="#">Bruno - When I Was Your Man</a></li>
+					<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
+					href="#">Adele - Rolling In The Deep</a></li>
+				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
+					href="#">Bruno - When I Was Your Man</a></li>
+			</ul>
+		</div>
+		
 		<!-- <button class="btn" onclick="show()">PlayMenu</button>
 		<div id="playbar" class="dropdown">
 			<button id= "btn1" class="btn">MusicList</button>
@@ -382,6 +455,7 @@ input[type="range"] {
 				<li><a href="#" class="play" data-attr="playPauseAudio"></a></li>
 				<li><a href="#" class="right" data-attr="nextAudio"></a></li>
 				<li><a href="#" class="repeat" data-attr="repeatSong"></a></li>
+				<li><a class="nowplay" onclick="show()"></a></li>
 					<div class="volumeControl">
 				<div class="volume volume1"></div>
 				<input class="bar" data-attr="rangeVolume" type="range" min="0"

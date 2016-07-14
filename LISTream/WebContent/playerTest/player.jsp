@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -111,7 +112,7 @@ ul, li {
 	display: inline-block;
 	text-align: center;
 	margin-top: 8px;
-	margin-left: 60px
+	margin-left: inherit;
 }
 
 .controls li a {
@@ -198,7 +199,7 @@ ul, li {
 }
 
 .volume {
-	width: 20px;
+	width: 15px;
 	height: 20px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -243,6 +244,7 @@ ul, li {
 	float:right;
 	position: relative;
 	margin: 10px auto;
+	padding-right: 10px;
 }
 
 .volumeControl .updateProgress {
@@ -265,6 +267,7 @@ input[type="range"] {
 	font-size: 12px;
 	padding: 5px;
 	float:left;
+	position: inherit;
 }
 
 .audioTime {
@@ -325,6 +328,9 @@ input[type="range"] {
 	<div class="containerPlayer">
 		<div id="listContainer" class="playlistContainer">
 			<ul id="playListContainer">
+				<%-- <c:forEach>
+					
+				</c:forEach> --%>
 				<li data-src="../songs/rolling-in-the-deep-adele.mp3"><a
 					href="#">Adele - Rolling In The Deep</a></li>
 				<li data-src="../songs/when-i-was-your-man-bruno-mars.mp3"><a
@@ -343,6 +349,7 @@ input[type="range"] {
 				<li><a href="#" class="play" data-attr="playPauseAudio"></a></li>
 				<li><a href="#" class="right" data-attr="nextAudio"></a></li>
 				<li><a href="#" class="repeat" data-attr="repeatSong"></a></li>
+				<li><a href="#" class="list" data-attr="toggleList"></a></li>
 					<div class="volumeControl">
 				<div class="volume volume1"></div>
 				<input class="bar" data-attr="rangeVolume" type="range" min="0"
