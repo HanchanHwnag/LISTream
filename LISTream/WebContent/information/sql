@@ -1,4 +1,3 @@
-select * from member;
 
 drop table user_info;
 create table user_info(
