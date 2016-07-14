@@ -63,6 +63,7 @@ ul, li {
 
 /* Playlist */
 #listContainer {
+	display:none;
 	width: 100%;
 	background-color: #fafafa;
 }
