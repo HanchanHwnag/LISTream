@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<table border="1">
+	<table border="1">hfg
 		<tbody>
 			<c:forEach var="k" items="${list }">
 				<tr>
