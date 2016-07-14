@@ -10,15 +10,15 @@
 <body>
 	<table border="1">
 		<tbody>
-			<tr>
-				<c:forEach var="k" items="${list }">
+			<c:forEach var="k" items="${list }">
+				<tr>
 					<td>${k.user_info_code }</td>
 					<td>${k.id }</td>
 					<td>${k.pwd }</td>
 					<td>${k.name }</td>
 					<td>${k.email }</td>
-				</c:forEach>
-			</tr>
+				</tr>
+			</c:forEach>
 		</tbody>
 	</table>
 </body>

@@ -30,8 +30,9 @@ ul, li {
 .containerPlayer, .containerSource {
 	display: inline-block;
 	float: left;
-	padding: 10px;
-	margin: 0px 10px;
+	padding: 0px;
+	margin: 0px 0px;
+	width: 100%;
 }
 
 .snippet {
@@ -97,21 +98,19 @@ ul, li {
 /* Player Controls */
 #playerContainer {
 	width: 100%;
-	height: 130px;
+	height: 50px;
 	background-color: #333333;
 }
 
 .controls li:first {
-	margin-right: 10px
+	margin-right: 5px;
 }
 
 .controls li {
-	float: left;
 	display: inline-block;
-	width: 50px;
 	text-align: center;
 	margin-top: 8px;
-	margin-left: 10px
+	margin-left: 60px
 }
 
 .controls li a {
@@ -240,8 +239,9 @@ ul, li {
 }
 
 .volumeControl {
+	float:right;
 	position: relative;
-	margin: 8px auto;
+	margin: 10px auto;
 }
 
 .volumeControl .updateProgress {
@@ -251,6 +251,7 @@ ul, li {
 }
 
 input[type="range"] {
+    margin-top: inherit;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	background-color: #00BD9B;
@@ -262,6 +263,7 @@ input[type="range"] {
 	color: #00bd9b;
 	font-size: 12px;
 	padding: 5px;
+	float:left;
 }
 
 .audioTime {
@@ -330,26 +332,29 @@ input[type="range"] {
 		</div>
 		<div id="playerContainer">
 			<ul class="controls">
+				<div class="audioDetails">
+				<span class="songPlay"></span> <span data-attr="timer"
+					class="audioTime"></span>
+				</div>
 				<li><a href="#" class="shuffle shuffleActive"
 					data-attr="shuffled"></a></li>
 				<li><a href="#" class="left" data-attr="prevAudio"></a></li>
 				<li><a href="#" class="play" data-attr="playPauseAudio"></a></li>
 				<li><a href="#" class="right" data-attr="nextAudio"></a></li>
 				<li><a href="#" class="repeat" data-attr="repeatSong"></a></li>
+					<div class="volumeControl">
+				<div class="volume volume1"></div>
+				<input class="bar" data-attr="rangeVolume" type="range" min="0"
+					max="1" step="0.1" value="0.7" />
+				</div>
+			
 			</ul>
-			<div class="audioDetails">
-				<span class="songPlay"></span> <span data-attr="timer"
-					class="audioTime"></span>
-			</div>
+			
 			<div class="progress">
 				<div data-attr="seekableTrack" class="seekableTrack"></div>
 				<div class="updateProgress"></div>
 			</div>
-			<div class="volumeControl">
-				<div class="volume volume1"></div>
-				<input class="bar" data-attr="rangeVolume" type="range" min="0"
-					max="1" step="0.1" value="0.7" />
-			</div>
+			
 		</div>
 	</div>
 </body>
