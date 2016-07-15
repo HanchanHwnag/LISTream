@@ -82,9 +82,8 @@ public class Controller {
 	}
 	// 장르 데이터
 	@RequestMapping(value="login/genre.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
-	@ResponseBody
-	public String genre_ok(HttpServletResponse response) throws Exception {
-		System.out.println("!!");
+	public ModelAndView genre_ok(HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("login/genre_list");
 		List<GenreVO> genre = dao.selectGenre();
 		String result = "";
 		
@@ -98,7 +97,8 @@ public class Controller {
 				result += "/";
 		}
 		
-		return result;
+		mv.addObject("result", result);
+		return mv;
 	}
 	@RequestMapping("login/music_view.do")
 	public ModelAndView music_view(){
@@ -108,7 +108,8 @@ public class Controller {
 	@RequestMapping("login/register_music.do")
 	public ModelAndView register_music(HttpServletRequest request) throws Exception {
 		request.setCharacterEncoding("utf-8");
-		final String filePath = request.getServletContext().getRealPath("/upload/");
+		final String filePath = "/upload/";
+		System.out.println(filePath);
 		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
 		Iterator<String> itr = multipartHttpServletRequest.getFileNames();
 		
@@ -119,6 +120,7 @@ public class Controller {
 		
 		while(itr.hasNext()){
 			multipartFile = multipartHttpServletRequest.getFile(itr.next());
+			
 			mvo = new MusicVO();
 			
 			if(multipartFile.isEmpty() == false){
@@ -199,7 +201,8 @@ public class Controller {
 	// 음악 검색
 	@RequestMapping(value="search_music.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
 	@ResponseBody
-	public String search_music(HttpServletRequest request){
+	public ModelAndView search_music(HttpServletRequest request){
+		ModelAndView mv = new ModelAndView("music/music_list");
 		String str = request.getParameter("search");
 		
 		List<MusicVO> list = dao.searchMusic(str);
@@ -217,6 +220,8 @@ public class Controller {
 		
 		result += "]";
 		
-		return result;
+		mv.addObject("result", result);
+		
+		return mv;
 	}
 }
