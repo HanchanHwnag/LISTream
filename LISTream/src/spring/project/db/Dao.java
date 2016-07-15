@@ -57,4 +57,7 @@ public class Dao {
 	public List<MusicVO> searchMusic(String music_title){
 		return template.selectList("searchMusic", music_title);
 	}
+	public List<MusicVO> selectMusic(String music_title){
+		return template.selectList("selectMusic", music_title);
+	}
 }

@@ -82,8 +82,9 @@ public class Controller {
 	}
 	// 장르 데이터
 	@RequestMapping(value="login/genre.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
-	public ModelAndView genre_ok(HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("login/genre_list");
+	@ResponseBody
+	public String genre_ok(HttpServletResponse response) throws Exception {
+		System.out.println("!!");
 		List<GenreVO> genre = dao.selectGenre();
 		String result = "";
 		
@@ -97,8 +98,7 @@ public class Controller {
 				result += "/";
 		}
 		
-		mv.addObject("result", result);
-		return mv;
+		return result;
 	}
 	@RequestMapping("login/music_view.do")
 	public ModelAndView music_view(){
@@ -108,8 +108,7 @@ public class Controller {
 	@RequestMapping("login/register_music.do")
 	public ModelAndView register_music(HttpServletRequest request) throws Exception {
 		request.setCharacterEncoding("utf-8");
-		final String filePath = "/upload/";
-		System.out.println(filePath);
+		final String filePath = request.getServletContext().getRealPath("/upload/");
 		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
 		Iterator<String> itr = multipartHttpServletRequest.getFileNames();
 		
@@ -120,7 +119,6 @@ public class Controller {
 		
 		while(itr.hasNext()){
 			multipartFile = multipartHttpServletRequest.getFile(itr.next());
-			
 			mvo = new MusicVO();
 			
 			if(multipartFile.isEmpty() == false){
@@ -199,29 +197,43 @@ public class Controller {
 	}
 	/*---------------------------------------------------------------------------------------------*/
 	// 음악 검색
-	@RequestMapping(value="search_music.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
-	@ResponseBody
+	@RequestMapping(value="music/search_music.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
 	public ModelAndView search_music(HttpServletRequest request){
 		ModelAndView mv = new ModelAndView("music/music_list");
 		String str = request.getParameter("search");
+		List<MusicVO> list = null;
 		
-		List<MusicVO> list = dao.searchMusic(str);
 		String result = "[";
-		
-		int idx = 0;
-		for(MusicVO mvo : list){
-			idx++;
-			result += "{";
-			result += "\"music_title\" : \"" + mvo.getMusic_title() + "\"";
-			result += "}";
-			if(idx != list.size())
-				result += ",";
+		if(str != null && str.trim() != ""){
+			list = dao.searchMusic(str);
+			
+			int idx = 0;
+			for(MusicVO mvo : list){
+				idx++;
+				result += "{";
+				result += "\"music_title\" : \"" + mvo.getMusic_title() + "\"";
+				result += "}";
+				if(idx != list.size())
+					result += ",";
+			}
 		}
-		
 		result += "]";
-		
+
 		mv.addObject("result", result);
+		return mv;
+	}
+	
+	@RequestMapping("music/search_music_view.do")
+	public ModelAndView select_music(HttpServletRequest request){
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (Exception e) {}
 		
+		ModelAndView mv = new ModelAndView("music/search_music");
+		List<MusicVO> list = dao.selectMusic(request.getParameter("music_title"));
+		
+		mv.addObject("list", list);
+		mv.addObject("music_title", request.getParameter("music_title"));
 		return mv;
 	}
 }
