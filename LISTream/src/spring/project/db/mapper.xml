@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	<!-- Music 삽입 -->
 	<insert id="insertMusic" parameterType="spring.project.db.MusicVO">
-		insert into music values(music_code.nextval, #{artist}, #{music_title}, #{path}, 0, sysdate, #{genre_code})
+		insert into music values(music_seq.nextval, #{artist}, #{music_title}, #{path}, 0, sysdate, #{genre_code})
 	</insert>
 	<!-- User totalCount 검색 -->
 	<select id="userTotalCount" resultType="Integer">
@@ -34,7 +34,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				(select * from user_info where id not in ('admin1', 'admin2', 'admin3', 'admin4', 'admin5')) a order by r_num
 		) where r_num between #{begin} and #{end}
 	</select>
+	<!-- User 삭제 -->
 	<delete id="deleteUser" parameterType="java.util.List">
-		delete from user_info where user_info_code = #{user_info_cde}
+		delete from user_info where user_info_code = #{user_info_code}
 	</delete>
+	<!-- USer Search 기능 -->
+	<select id="searchUser" resultType="spring.project.db.UserVO" parameterType="String">
+		select * from (
+			select rownum r_num, a.* from 
+				(select * from user_info where id = #{id} and id not in ('admin1', 'admin2', 'admin3', 'admin4', 'admin5')) a
+		) 
+	</select>
+	<!-- Music 관련 -->
+	
+	<!-- 음악 검색 -->
+	<select id="searchMusic" resultType="spring.project.db.MusicVO" parameterType="String">
+		select * from (
+			select rownum r_num, a.* from (
+				(select * from music where lower(music_title) LIKE '%' || lower(#{music_title}) || '%' order by music_hit desc) a)
+			) where r_num <![CDATA[<]]> 7
+	</select>
+	<select id="selectMusic" resultType="spring.project.db.MusicVO" parameterType="String">
+		select rownum r_num, a.* from (
+			(select * from music where lower(music_title) = lower(#{music_title}) order by music_hit desc) a)
+	</select>
 </mapper>
