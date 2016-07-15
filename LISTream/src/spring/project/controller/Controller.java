@@ -45,7 +45,7 @@ public class Controller {
 	public void setPage(Page page) { this.page = page; }
 	
 	// 로그인
-	@RequestMapping("/login.do")
+	@RequestMapping("login/login.do")
 	public ModelAndView login(UserVO vo){
 		
 		boolean flag = false;
@@ -56,34 +56,35 @@ public class Controller {
 		
 		ModelAndView mv;
 		if(flag){
-			mv = new ModelAndView("login");
+			mv = new ModelAndView("login/login");
 			mv.addObject("vo", vo);
 		} else {
-			mv = new ModelAndView("login_form");
+			mv = new ModelAndView("login/login_form");
 			mv.addObject("result", "fail");
 		}
 		
 		return mv;
 	}
 	// 회원가입 화면
-	@RequestMapping("/register_view.do")
+	@RequestMapping("login/register_view.do")
 	public ModelAndView register_view(){
-		ModelAndView mv = new ModelAndView("/user_register_user");
+		ModelAndView mv = new ModelAndView("login/user_register_user");
 		List<UserVO> list = dao.selectAll();
 		
 		mv.addObject("list", list);
 		return mv;
 	}
 	// 회원 가입
-	@RequestMapping("/register_ok.do")
+	@RequestMapping("login/register_ok.do")
 	public ModelAndView register_ok(UserVO vo){
 		dao.insertOne(vo);
-		return new ModelAndView("redirect:/login_form.jsp");
+		return new ModelAndView("login/login_form");
 	}
 	// 장르 데이터
-	@RequestMapping(value="/genre.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
+	@RequestMapping(value="login/genre.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
 	@ResponseBody
 	public String genre_ok(HttpServletResponse response) throws Exception {
+		System.out.println("!!");
 		List<GenreVO> genre = dao.selectGenre();
 		String result = "";
 		
@@ -99,12 +100,12 @@ public class Controller {
 		
 		return result;
 	}
-	@RequestMapping("/music_view.do")
+	@RequestMapping("login/music_view.do")
 	public ModelAndView music_view(){
-		return new ModelAndView("admin_register_music");
+		return new ModelAndView("admin/admin_register_music");
 	}
 	// 음악 등록
-	@RequestMapping("/register_music.do")
+	@RequestMapping("login/register_music.do")
 	public ModelAndView register_music(HttpServletRequest request) throws Exception {
 		request.setCharacterEncoding("utf-8");
 		final String filePath = request.getServletContext().getRealPath("/upload/");
@@ -123,38 +124,44 @@ public class Controller {
 			if(multipartFile.isEmpty() == false){
 				fileName = multipartFile.getOriginalFilename();
 				file = new File(filePath + fileName);
-				AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
-				AudioFormat format = audioInputStream.getFormat();
-				long frames = audioInputStream.getFrameLength();
-				double durationInSeconds = (frames+0.0) / format.getFrameRate();
+				multipartFile.transferTo(file); // 파일 업로드
 				
 				mvo.setArtist(multipartHttpServletRequest.getParameter("artist"));
 				mvo.setMusic_title(multipartHttpServletRequest.getParameter("music_title"));
 				mvo.setPath(filePath + fileName);
 				mvo.setGenre_code(multipartHttpServletRequest.getParameter("genre_code"));		
-				multipartFile.transferTo(file); // 파일 업로드
 				
 				dao.insertMusic(mvo);
 			}
 		}
 		
-		return new ModelAndView("/admin_register_music");
+		return new ModelAndView("admin/admin_register_music");
 	}
 	// 회원 관리 페이지
-	@RequestMapping("user_list_view.do")
+	@RequestMapping("login/user_list_view.do")
 	public ModelAndView user_list(HttpServletRequest request) throws Exception{
 		request.setCharacterEncoding("utf-8");
-		ModelAndView mv = new ModelAndView("admin_manage_user");
+		ModelAndView mv = new ModelAndView("admin/admin_manage_user");
 		
+		List<UserVO> list = null;
 		String cPage = request.getParameter("cPage");
+		String id = request.getParameter("id");
 		if(cPage != null)
 			page.setNowPage(Integer.parseInt(cPage));
 		
-		page.setTotalRecord(dao.userTotalCount());
-		page.setTotalPage();
+		if(id != null && !id.trim().equals("")){
+			list = dao.searchUser(id);
+			page.setTotalRecord(list.size());
+			page.setTotalPage();
+		} else {
+			page.setTotalRecord(dao.userTotalCount());
+			page.setTotalPage();
+		}
 		
 		page.setBegin((page.getNowPage()-1)*page.getNumPerPage() + 1);
 		page.setEnd(page.getBegin() + page.getNumPerPage() - 1);
+		if(page.getEnd() > page.getTotalRecord())
+			page.setEnd(page.getTotalRecord());
 		
 		page.setBeginPage((page.getNowPage()-1)/page.getPagePerBlock()*page.getPagePerBlock() + 1);
 		page.setEndPage(page.getBeginPage() + page.getPagePerBlock() - 1);
@@ -164,18 +171,16 @@ public class Controller {
 		Map<String, Integer> map = new HashMap<>();
 		map.put("begin", page.getBegin());
 		map.put("end", page.getEnd());
-		List<UserVO> list = dao.selectUser(map);
 		
-		System.out.println("BeginPage : " +page.getBeginPage());
-		System.out.println("EndPage : " +page.getEndPage());
-		System.out.println("TotalPage : " +page.getTotalPage());
-		
+		if(list == null)
+			list = dao.selectUser(map);
+
 		mv.addObject("page", page);
 		mv.addObject("list", list);
 		return mv; 
 	}
 	// 유저 삭제
-	@RequestMapping(value="delete_user.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
+	@RequestMapping(value="login/delete_user.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
 	@ResponseBody
 	public String delete_user(HttpServletRequest request){
 		String[] str = request.getParameterValues("del_arr[]");
@@ -184,9 +189,34 @@ public class Controller {
 		
 		int totalCount = dao.userTotalCount();
 		String res = "null";
-		if(totalCount != 0 && totalCount % page.getNumPerPage() == 0)
+		if(totalCount != 0 && totalCount % page.getNumPerPage() == 0){
 			res = "true";
-		
+		}
+
 		return res;
+	}
+	/*---------------------------------------------------------------------------------------------*/
+	// 음악 검색
+	@RequestMapping(value="search_music.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
+	@ResponseBody
+	public String search_music(HttpServletRequest request){
+		String str = request.getParameter("search");
+		
+		List<MusicVO> list = dao.searchMusic(str);
+		String result = "[";
+		
+		int idx = 0;
+		for(MusicVO mvo : list){
+			idx++;
+			result += "{";
+			result += "\"music_title\" : \"" + mvo.getMusic_title() + "\"";
+			result += "}";
+			if(idx != list.size())
+				result += ",";
+		}
+		
+		result += "]";
+		
+		return result;
 	}
 }
