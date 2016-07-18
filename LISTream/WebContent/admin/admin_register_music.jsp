@@ -52,9 +52,9 @@
 					</select>
 				</td>
 			</tr>
-			<tr><td><input type="text" name="artist" placeholder="artist"></td></tr>
-			<tr><td><input type="text" name="music_title" placeholder="music_title"></td></tr>
-			<tr><td><input type="file" name="fname"></td></tr>
+<!-- 			<tr><td><input type="text" name="artist" placeholder="artist"></td></tr>
+			<tr><td><input type="text" name="music_title" placeholder="music_title"></td></tr> -->
+			<tr><td><input type="file" name="files[]" multiple="multiple"></td></tr>
 			<tr style="text-align: center;"><td><input type="button" value="등록" onclick="register(this.form)"></td></tr>
 		</table>
 	</form>

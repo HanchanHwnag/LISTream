@@ -14,12 +14,15 @@
 		for (var i = 0; i < document.forms[0].elements.length; i++) {
 			if (document.forms[0].elements[i].value.trim() == "") {
 				alert(document.forms[0].elements[i].name + "이 비었습니다");
-				document.forms[0].elements[i].focus();
+				document.forms[0].el
+				ements[i].focus();
 				return;
 			}
 		}
 		f.action = "login.do";
 		f.submit();
+		
+		
 	}
 	
 	function register(f){

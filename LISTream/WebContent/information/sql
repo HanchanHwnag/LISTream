@@ -1,94 +1,162 @@
 
-drop table user_info;
-create table user_info(
-  user_info_code number primary key not null,
-  id varchar2(100) not null,
-  pwd varchar2(100) not null,
-  name varchar2(50) not null,
-  email varchar2(100) not null
-);
-drop sequence user_info_seq;
-create sequence user_info_seq;
 
 
 
+DROP
+  TABLE favorite CASCADE CONSTRAINTS ;
 
-drop table genre;
-create table genre(
-  genre_code number primary key not null,
-  genre_name varchar2(50) not null
-);
-drop sequence genre_seq;
-create sequence genre_seq;
+DROP
+  TABLE genre CASCADE CONSTRAINTS ;
 
-drop table theme;
-create table theme(
-  theme_code number primary key,
-  theme_name varchar2(50) not null
-);
-drop sequence theme_seq;
-create sequence theme_seq;
+DROP
+  TABLE music CASCADE CONSTRAINTS ;
 
-drop table music;
-create table music(
-  music_code number primary key not null,
-  singer varchar2(100) not null,
-  music_title varchar2(100) not null,
-  playtime number not null,
-  path varchar2(1000) not null,
-  hit number default 0,
-  regdate date not null,
-  genre_code number not null  
-);
-drop sequence music_seq;
-create sequence music_seq;
+DROP
+  TABLE musiclist CASCADE CONSTRAINTS ;
 
+DROP
+  TABLE playlist CASCADE CONSTRAINTS ;
 
-drop table playlist;
-create table playlist(
-  playlist_code number primary key not null,
-  user_info_code number not null,
-  playlist_title varchar2(100) not null,
-  theme_code number not null,
-  hit number default 0,
-  regdate date
-);
-drop sequence playlist_seq;
-create sequence playlist_seq;
+DROP
+  TABLE reply CASCADE CONSTRAINTS ;
+
+DROP
+  TABLE theme CASCADE CONSTRAINTS ;
+
+DROP
+  TABLE user_info CASCADE CONSTRAINTS ;
+
+CREATE
+  TABLE favorite
+  (
+    favorite_code  INTEGER NOT NULL ,
+    user_info_code INTEGER NOT NULL ,
+    playlist_code  INTEGER NOT NULL
+  ) ;
+ALTER TABLE favorite ADD CONSTRAINT favorite_PK PRIMARY KEY ( favorite_code ) ;
 
 
-drop table musiclist;
-create table musiclist(
-  musiclist_code number primary key,
-  playlist_code number not null,
-  music_code number not null
-);
-drop sequence musiclist_seq;
-create sequence musiclist_seq;
-
-drop table reply;
-create table reply(
-  reply_code number primary key not null,
-  content varchar2(300) not null,
-  user_info_code number not null,
-  playlist_code number not null,
-  regdate date 
-);
-drop sequence reply;
-create sequence reply_seq;
+CREATE
+  TABLE genre
+  (
+    genre_code INTEGER NOT NULL ,
+    genre_name VARCHAR2 (100)
+  ) ;
+ALTER TABLE genre ADD CONSTRAINT genre_PK PRIMARY KEY ( genre_code ) ;
 
 
-drop table favorite;
-create table favorite(
-  favorite_code number primary key not null,
-  user_info_code number not null,
-  playlist_code number not null
-);
-drop sequence favorite;
-create sequence favorite;
+CREATE
+  TABLE music
+  (
+    music_code  INTEGER NOT NULL ,
+    artist      VARCHAR2 (100) ,
+    music_title VARCHAR2 (255) ,
+    path CLOB ,
+    music_hit     INTEGER ,
+    music_regdate DATE ,
+    genre_code    INTEGER NOT NULL ,
+    playtime      VARCHAR2 (100)
+  ) ;
+ALTER TABLE music ADD CONSTRAINT music_PK PRIMARY KEY ( music_code ) ;
 
 
+CREATE
+  TABLE musiclist
+  (
+    musiclist_code INTEGER NOT NULL ,
+    music_code     INTEGER NOT NULL ,
+    playlist_code  INTEGER NOT NULL
+  ) ;
 
 
+CREATE
+  TABLE playlist
+  (
+    playlist_code  INTEGER NOT NULL ,
+    user_info_code INTEGER NOT NULL ,
+    playlist_title VARCHAR2 (100) ,
+    hit            INTEGER ,
+    regdate        DATE ,
+    theme_code     INTEGER NOT NULL
+  ) ;
+ALTER TABLE playlist ADD CONSTRAINT playlist_PK PRIMARY KEY ( playlist_code ) ;
 
 
+CREATE
+  TABLE reply
+  (
+    reply_code     INTEGER NOT NULL ,
+    content        VARCHAR2 (100) ,
+    regdate        DATE ,
+    user_info_code INTEGER NOT NULL ,
+    playlist_code  INTEGER NOT NULL
+  ) ;
+ALTER TABLE reply ADD CONSTRAINT reply_PK PRIMARY KEY ( reply_code ) ;
+
+
+CREATE
+  TABLE theme
+  (
+    theme_code INTEGER NOT NULL ,
+    theme_name VARCHAR2 (100)
+  ) ;
+ALTER TABLE theme ADD CONSTRAINT theme_PK PRIMARY KEY ( theme_code ) ;
+
+
+CREATE
+  TABLE user_info
+  (
+    user_info_code INTEGER NOT NULL ,
+    id             VARCHAR2 (100) ,
+    pwd            VARCHAR2 (100) ,
+    name           VARCHAR2 (100) ,
+    email          VARCHAR2 (100)
+  ) ;
+ALTER TABLE user_info ADD CONSTRAINT user_info_PK PRIMARY KEY ( user_info_code
+) ;
+
+
+ALTER TABLE favorite ADD CONSTRAINT favorite_playlist_FK FOREIGN KEY (
+playlist_code ) REFERENCES playlist ( playlist_code ) ON
+DELETE CASCADE ;
+
+ALTER TABLE favorite ADD CONSTRAINT favorite_user_info_FK FOREIGN KEY (
+user_info_code ) REFERENCES user_info ( user_info_code ) ON
+DELETE CASCADE ;
+
+ALTER TABLE music ADD CONSTRAINT music_genre_FK FOREIGN KEY ( genre_code )
+REFERENCES genre ( genre_code ) ;
+
+ALTER TABLE musiclist ADD CONSTRAINT musiclist_music_FK FOREIGN KEY (
+music_code ) REFERENCES music ( music_code ) ON
+DELETE CASCADE ;
+
+ALTER TABLE musiclist ADD CONSTRAINT musiclist_playlist_FK FOREIGN KEY (
+playlist_code ) REFERENCES playlist ( playlist_code ) ON
+DELETE CASCADE ;
+
+ALTER TABLE playlist ADD CONSTRAINT playlist_theme_FK FOREIGN KEY ( theme_code
+) REFERENCES theme ( theme_code ) ;
+
+ALTER TABLE playlist ADD CONSTRAINT playlist_user_info_FK FOREIGN KEY (
+user_info_code ) REFERENCES user_info ( user_info_code ) ON
+DELETE CASCADE ;
+
+ALTER TABLE reply ADD CONSTRAINT reply_playlist_FK FOREIGN KEY ( playlist_code
+) REFERENCES playlist ( playlist_code ) ON
+DELETE CASCADE ;
+
+ALTER TABLE reply ADD CONSTRAINT reply_user_info_FK FOREIGN KEY (
+user_info_code ) REFERENCES user_info ( user_info_code ) ON
+DELETE CASCADE ;
+
+CREATE SEQUENCE user_info_user_info_code_SEQ START WITH 1 NOCACHE ORDER ;
+CREATE OR REPLACE TRIGGER user_info_user_info_code_TRG BEFORE
+  INSERT
+    ON user_info FOR EACH ROW WHEN
+    (
+      NEW.user_info_code IS NULL
+    )
+    BEGIN :NEW.user_info_code := user_info_user_info_code_SEQ.NEXTVAL;
+END;
+/

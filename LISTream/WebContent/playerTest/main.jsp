@@ -9,6 +9,25 @@
 <script src="../js/jquery-3.0.0.js"></script>
 <script src="../js/jquery.audioControls.min.js"></script>
 <script type="text/javascript">
+
+
+$(function(){
+	$("#addMusic").click(function(){
+		$.ajax({
+			url: "/LISTream/playerTest/select_musics_to_play.do",
+			data: {"playerlist_code":"32"},
+			type: "post",
+			dataType: "html",
+			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+			success: function(data){
+				$("#playListContainer").html(data);
+			},
+			error: function(request,status,error){
+				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			}
+		});
+	});
+});
 	function show() {
 		document.getElementById("listContainer").classList.toggle("show");
 	}
@@ -378,17 +397,8 @@ input[type="range"] {
 	<div id="" class="rb">
 		<div id="listContainer" class="playlistContainer">
 			<ul id="playListContainer">
-				<c:choose>
-					<c:when test="${nowplaylist.size()==0||nowplaylist==null}">
-						<li data-src=""><a href="#">재생할 음악이 없습니다</a></li>
-					</c:when>
-					<c:otherwise>
-						<c:forEach var="k" items="${nowplaylist}">
-							<li data-src="${k.path }"><a href="#"><c:out
-										value="${k.music_title }" /></a></li>
-						</c:forEach>
-					</c:otherwise>
-				</c:choose>
+				<li data-src="">재생할 음악이 없습니다</li>
+				<li data-src="/Users/hanchanhwang/MyStudy/Project2/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/LISTream/upload/성시경-03-희재.mp3"><a href="#">Can`t Stop Me (Club Mix)</a></li>
 			</ul>
 		</div>
 
@@ -424,6 +434,7 @@ input[type="range"] {
 		</div>
 	</div>
 	<div id="aa">
+		<input type="button" id="addMusic" value="재생">
 		<p>1</p>
 		<p>2</p>
 		<p>3</p>

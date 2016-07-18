@@ -7,6 +7,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectAll" resultType="spring.project.db.UserVO">
 		select * from user_info where id not in ('admin1', 'admin2', 'admin3', 'admin4', 'admin5')
 	</select>
+	<!-- 모든 Music 선택 -->
+	<select id="selectAllMusic" resultType="spring.project.db.MusicVO">
+		select * from music 
+	</select>
 	<!-- 특정 User 선택 -->
 	<select id="selectOne" resultType="spring.project.db.UserVO">
 		select * from user_info where id = #{id}
@@ -21,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	<!-- Music 삽입 -->
 	<insert id="insertMusic" parameterType="spring.project.db.MusicVO">
-		insert into music values(music_code.nextval, #{artist}, #{music_title}, #{path}, 0, sysdate, #{genre_code})
+		insert into music values(music_seq.nextval, #{artist}, #{music_title}, #{path}, 0, sysdate, #{genre_code}, #{playtime})
 	</insert>
 	<!-- User totalCount 검색 -->
 	<select id="userTotalCount" resultType="Integer">
@@ -37,4 +41,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteUser" parameterType="java.util.List">
 		delete from user_info where user_info_code = #{user_info_cde}
 	</delete>
+	<!-- 선택한 플레이리스트의 재생할 음악목록 가져오기 -->
+	<select id="selectMusicsToPlay" parameterType="String" resultType="spring.project.db.MusicVO">
+		SELECT m.music_code,m.artist,m.music_title,m.path,m.music_hit,m.music_regdate,m.genre_code,m.playtime
+		FROM musiclist L JOIN music M
+		ON (L.music_code=M.music_code)
+		WHERE playlist_code=32<!-- #{playlist_code} -->
+	</select>
 </mapper>

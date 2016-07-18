@@ -57,4 +57,13 @@ public class Dao {
 	public List<MusicVO> searchMusic(String music_title){
 		return template.selectList("searchMusic", music_title);
 	}
+	// 음악 전체 리스트 받기
+	public List<MusicVO> selectAllMusic(){
+		return template.selectList("selectAllMusic");
+	}
+	//플레이할 music list 받기
+	public List<MusicVO> selectMusicsToPlay(String playlist_code){
+		return template.selectList("selectMusicsToPlay", playlist_code);
+	}
+	
 }
