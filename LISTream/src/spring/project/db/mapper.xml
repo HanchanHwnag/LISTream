@@ -38,14 +38,74 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				(select * from user_info where id not in ('admin1', 'admin2', 'admin3', 'admin4', 'admin5')) a order by r_num
 		) where r_num between #{begin} and #{end}
 	</select>
+	<!-- User 삭제 -->
 	<delete id="deleteUser" parameterType="java.util.List">
-		delete from user_info where user_info_code = #{user_info_cde}
+		delete from user_info where user_info_code = #{user_info_code}
 	</delete>
+	
+	<!-- USer Search 기능 -->
+	<select id="searchUser" resultType="spring.project.db.UserVO" parameterType="String">
+		select * from (
+			select rownum r_num, a.* from 
+				(select * from user_info where id = #{id} and id not in ('admin1', 'admin2', 'admin3', 'admin4', 'admin5')) a
+		) 
+	</select>
+	
+	<!-- Music 관련 -->
+	
 	<!-- 선택한 플레이리스트의 재생할 음악목록 가져오기 -->
 	<select id="selectMusicsToPlay" parameterType="String" resultType="spring.project.db.MusicVO">
 		SELECT m.music_code,m.artist,m.music_title,m.path,m.music_hit,m.music_regdate,m.genre_code,m.playtime
 		FROM musiclist L JOIN music M
 		ON (L.music_code=M.music_code)
 		WHERE playlist_code=32<!-- #{playlist_code} -->
+	</select>
+	<!-- 음악 검색 < 7(ajax) -->
+	<select id="searchMusic" resultType="spring.project.db.MusicVO" parameterType="java.util.Map">
+		select distinct ${field} from (
+			select rownum r_num, a.* from (
+				(select * from music where lower(${field}) LIKE '%' || lower(#{search_text}) || '%' order by music_hit desc) a)
+			) where r_num <![CDATA[<]]> 7
+	</select>
+	<!-- 전체 검색 -->
+	<select id="selectMusicTotalCount" resultType="Integer">
+		select count(*) from music
+	</select>
+	<select id="selectMusic" resultType="spring.project.db.MusicVO">
+		select * from (
+			select rownum r_num, a.* from (
+				(select * from music order by music_hit desc) a)
+			) where r_num between #{begin} and #{end} 
+	</select>
+	<!-- Title을 이용한 검색 -->
+	<select id="selectMusicByTitleTotalCount" resultType="Integer" parameterType="java.util.Map">
+		select count(*) from (select * from music where lower(${field}) = lower(#{search_text}))
+	</select>
+	<select id="selectMusicByTitle" resultType="spring.project.db.MusicVO" parameterType="java.util.Map">
+		select * from (
+			select rownum r_num, a.* from (
+				(select * from music where lower(${field}) = lower(#{search_text}) order by music_hit desc) a)
+			) where r_num between #{begin} and #{end} 
+	</select>
+	<!-- Genre를 이용한 검색 -->
+	<select id="selectMusicByGenreTotalCount" resultType="Integer" parameterType="java.util.Map">
+		select count(*) from (select * from music where genre_code = #{genre})
+	</select>
+	<select id="selectMusicByGenre" resultType="spring.project.db.MusicVO" parameterType="java.util.Map">
+		select * from (
+			select rownum r_num, a.* from (
+				select * from music where genre_code = #{genre} order by music_hit desc) a
+			) where r_num between #{begin} and #{end} 
+	</select>
+	<!-- Title And Genre를 이용한 검색 -->
+	<select id="selectMusicByGenreAndTitleTotalCount" resultType="Integer" parameterType="java.util.Map">
+		select count(*) from (
+			select * from music where genre_code = #{genre} and lower(${field}) = lower(#{search_text}))
+	</select>
+	<select id="selectMusicByGenreAndTitle" resultType="spring.project.db.MusicVO" parameterType="java.util.Map">
+		select * from (
+			select rownum r_num, a.* from (
+				(select * from music where genre_code = #{genre} and lower(${field}) = lower(#{search_text}) order by music_hit desc) a)
+			) where r_num between #{begin} and #{end} 
 	</select>
 </mapper>
