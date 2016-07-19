@@ -1,3 +1,4 @@
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -59,7 +60,7 @@
 		})
 	})
 	function insert_go(f) {
-		f.action="insert.do";
+		f.action="/LISTream/music/insert.do";
 		f.submit();
 	}
 </script>
@@ -77,6 +78,8 @@
 					<th>제목</th>
 					<th>조회수</th>
 					<th><input type="checkbox" name="all" id="checkall">전체선택</th>
+					<th><input type="button" name="put" value="담기" onclick="insert_go(this.form)"></th>
+					<th>리스트번호<input type="text" name="playlist_code" size="1"></th>
 				</tr>
 				<c:forEach var="k" items="${list}" varStatus="status">
 					<tr>
@@ -84,9 +87,9 @@
 						<td>${k.artist}</td>
 						<td>${k.music_title}</td>
 						<td>${k.music_hit}</td>
-						<td><input type="checkbox" name="chk" /></td>
-						<td><input type="button" name="play" value="듣기" /></td>
-						<td><input type="button" name="put" value="담기" onclick="insert_go(this.from)"/></td>
+						<td><input type="checkbox" name="chk" value="${k.music_code }" /></td>
+						<td><input type="button" name="play" value="듣기" ></td>
+					
 					</tr>															
 				</c:forEach>				
 			</table>			

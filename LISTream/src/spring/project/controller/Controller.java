@@ -238,14 +238,33 @@ public class Controller {
 		mv.addObject("music_title", request.getParameter("music_title"));
 		return mv;
 	}
-	@RequestMapping("/insert.do")
-	public ModelAndView insert(MusicListVO vo){
+	@RequestMapping("music/insert.do")
+	public ModelAndView insert(HttpServletRequest request){
+		System.out.println("Controller in");
+		String[] music_code = request.getParameterValues("chk");
+		String pcode = request.getParameter("playlist_code");
+		Map<String, String> map = new HashMap<>();
+		map.put("playlist_code", pcode);
+		try{
+			if(music_code == null || music_code.length <= 0){
+				System.out.println("No check");
+			}else{
+				for(int i=0;i<music_code.length;i++){
+					try {
+						map.put("music_code", music_code[i]);
+						System.out.println(map.get("music_code")+map.get("playlist_code"));
+						dao.insertMusicList(map);
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		ModelAndView mv = new ModelAndView("redirect:/music/search_music.jsp");
 		
-		ModelAndView mv = new ModelAndView("redirect:/musiclist.do");
-		dao.getInsert(vo);
 		return mv;
 	}
-	@RequestMapping("/musiclist_do")
-		
-	}
+	
 }

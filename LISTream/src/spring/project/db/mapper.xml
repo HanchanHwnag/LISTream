@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			(select * from music where lower(music_title) = lower(#{music_title}) order by music_hit desc) a)
 	</select>
 	<!-- MusicList 삽입 -->
-	<insert id="insertMusicList" parameterType="spring.project.db.MusicVO">
-		insert into musiclist values(musiclist_seq.nextval,#{muscilist_code},#{music_code},#{playlist_code})
+	<insert id="insertMusicList" parameterType="java.util.Map">
+		insert into musiclist values(musiclist_seq.nextval,#{music_code},#{playlist_code})
 	</insert>
 </mapper>

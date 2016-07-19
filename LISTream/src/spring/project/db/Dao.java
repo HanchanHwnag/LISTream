@@ -1,5 +1,6 @@
 package spring.project.db;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,17 +61,9 @@ public class Dao {
 	public List<MusicVO> selectMusic(String music_title){
 		return template.selectList("selectMusic", music_title);
 	}
-	public MusicListVO getInsert(MusicListVO mlvo) {
-		try {
-		int result = template.insert("insertMusicList", mlvo);
-		if(result > 0){
-			template.commit();
-		}else{
-			template.rollback();
-		}
-	} catch (Exception e) {
-		
-	}
-	return mlvo;
+	
+	
+	public void insertMusicList(Map<String, String> map) {
+		template.insert("insertMusicList", map);
 	}
 }
