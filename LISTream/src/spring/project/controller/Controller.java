@@ -133,8 +133,7 @@ public class Controller {
 		List<MusicVO> musicList = dao.selectAllMusic();
 
 		request.setCharacterEncoding("utf-8");
-//		final String filePath = request.getServletContext().getRealPath("/upload/");
-		final String filePath = "../musics/";
+		final String filePath = request.getServletContext().getRealPath("/upload/");
 		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
 		List<MultipartFile> multiList =multipartHttpServletRequest.getFiles("files[]");
 
@@ -370,6 +369,31 @@ public class Controller {
 			mv.addObject("genre", genre);
 			mv.addObject("type", type);
 			return mv;
+		}
+		
+		
+		//해당 플레이리스트의 음악리스트 가져오기
+		@RequestMapping(value = "playerTest/select_musics_to_play.do",produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
+		@ResponseBody
+		public String selectMusicsToPlay(HttpServletRequest request, HttpServletResponse response){
+		/*	System.out.println("Controller in");*/
+			String playlist_code = request.getParameter("playlist_code");
+			List<MusicVO> list =dao.selectMusicsToPlay(playlist_code);
+			/*System.out.println("1");*/
+			String result="";
+			if(list.size()==0||list==null){
+				result+="<li data-src='"+"'>재생할 음악이 없습니다</li>";
+			}else{
+				for (MusicVO k : list) {
+					result+="<li data-src='"
+							+k.getPath()
+							+"'><a href='#'>"
+							+k.getMusic_title()
+							+"</a></li>";
+				}
+			}
+			System.out.println(result);
+			return result;
 		}
 }
 

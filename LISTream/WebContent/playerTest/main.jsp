@@ -11,7 +11,8 @@
 <title>Insert title here</title>
 <script src="../js/jquery-3.0.0.js"></script>
 <script src="../js/jquery.audioControls.min.js"></script>
-<script type="text/javascript">	$(function(){
+<script type="text/javascript">	
+	$(function(){
 		$("#addMusic").click(function(){
 			var co = "\'32\'";
 			$.ajax({
