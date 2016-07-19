@@ -1,7 +1,7 @@
 package spring.project.db;
 
 public class MusicVO {
-	private String music_code, artist, music_title, playtime, path, music_hit, music_regdate, genre_code;
+	private String music_code, artist, music_title, playtime, path, music_hit, music_regdate, genre_code, r_num;
 
 	public String getMusic_code() {
 		return music_code;
@@ -65,6 +65,14 @@ public class MusicVO {
 
 	public void setGenre_code(String genre_code) {
 		this.genre_code = genre_code;
+	}
+
+	public String getR_num() {
+		return r_num;
+	}
+
+	public void setR_num(String r_num) {
+		this.r_num = r_num;
 	}
 	
 }

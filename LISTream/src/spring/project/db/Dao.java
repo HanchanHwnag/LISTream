@@ -54,10 +54,36 @@ public class Dao {
 		return template.selectList("searchUser", id);
 	}
 	/*---------------------------------------------------------*/
-	public List<MusicVO> searchMusic(String music_title){
-		return template.selectList("searchMusic", music_title);
+	// 전체 검색
+	public int selectMusicCount(){
+		return template.selectOne("selectMusicTotalCount");
 	}
-	public List<MusicVO> selectMusic(String music_title){
-		return template.selectList("selectMusic", music_title);
+	public List<MusicVO> selectMusic(Map<String, String> search_map){
+		return template.selectList("selectMusic", search_map);
+	}
+	// ajax 검색(전체 검색, 7개 아래로 검색)
+	public List<MusicVO> searchMusic(Map<String, String> search_map){
+		return template.selectList("searchMusic", search_map);
+	}
+	// 검색어를 이용한 검색
+	public int selectMusicByTitleCount(Map<String, String> search_map){
+		return template.selectOne("selectMusicByTitleTotalCount", search_map);
+	}
+	public List<MusicVO> selectMusicByTitle(Map<String, String> search_map){
+		return template.selectList("selectMusicByTitle", search_map);
+	}
+	// 장르를 이용한 검색
+	public int selectMusicByGenreCount(Map<String, String> search_map){
+		return template.selectOne("selectMusicByGenreTotalCount", search_map);
+	}
+	public List<MusicVO> selectMusicByGenre(Map<String, String> search_map){
+		return template.selectList("selectMusicByGenre", search_map);
+	}
+	// 장르와 검색어 모두를 이용한 검색
+	public int selectMusicByGenreAndTitleCount(Map<String, String> search_map){
+		return template.selectOne("selectMusicByGenreAndTitleTotalCount", search_map);
+	}
+	public List<MusicVO> selectMusicByGenreAndTitle(Map<String, String> search_map){
+		return template.selectList("selectMusicByGenreAndTitle", search_map);
 	}
 }

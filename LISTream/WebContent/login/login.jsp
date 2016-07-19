@@ -16,10 +16,10 @@
 </script>
 </head>
 <body>
-	${vo.id} <br/>
-	${vo.pwd} <br/>
+	${login_vo.name }
+	${login_vo.name }
 	
-	<c:if test="${vo.id == 'admin1' || vo.id == 'admin2' || vo.id == 'admin3' || vo.id == 'admin4' || vo.id == 'admin5'}">
+	<c:if test="${login_vo.id == 'admin1' || login_vo.id == 'admin2' || login_vo.id == 'admin3' || login_vo.id == 'admin4' || login_vo.id == 'admin5'}">
 		<input type="button" onclick="go_music_register()" value="음악 등록">
 		<input type="button" onclick="go_manage_user()" value="회원 관리">
 	</c:if>

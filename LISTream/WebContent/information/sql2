@@ -73,7 +73,8 @@ CREATE
     theme_code INTEGER NOT NULL ,
     theme_name VARCHAR2 (100)
   ) ;
-ALTER TABLE theme ADD CONSTRAINT theme_PK PRIMARY KEY ( theme_code ) ;
+ALTER TABLE theme ADD CONS
+TRAINT theme_PK PRIMARY KEY ( theme_code ) ;
 
 
 CREATE
@@ -90,7 +91,8 @@ ALTER TABLE user_info ADD CONSTRAINT user_info_PK PRIMARY KEY ( user_info_code
 ) ;
 
 
-ALTER TABLE favorite ADD CONSTRAINT favorite_playlist_FK FOREIGN KEY (
+ALTER TABLE favor
+ite ADD CONSTRAINT favorite_playlist_FK FOREIGN KEY (
 playlist_code ) REFERENCES playlist ( playlist_code ) ON
 DELETE CASCADE ;
 
