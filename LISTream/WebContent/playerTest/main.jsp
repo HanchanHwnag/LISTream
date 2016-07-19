@@ -398,7 +398,7 @@ input[type="range"] {
 		<div id="listContainer" class="playlistContainer">
 			<ul id="playListContainer">
 				<li data-src="">재생할 음악이 없습니다</li>
-				<li data-src="/Users/hanchanhwang/MyStudy/Project2/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/LISTream/upload/성시경-03-희재.mp3"><a href="#">Can`t Stop Me (Club Mix)</a></li>
+				<li data-src="../musics/Avicii - 01 - Wake Me Up (Radio Edit) - 192k.mp3"><a href="#">Can`t Stop Me (Club Mix)</a></li>
 			</ul>
 		</div>
 
