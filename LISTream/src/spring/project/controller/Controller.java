@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -70,10 +71,11 @@ public class Controller {
 
 	// 로그인
 	@RequestMapping("login/login.do")
-	public ModelAndView login(UserVO vo) {
+	public ModelAndView login(UserVO vo) throws Exception{
 
 		boolean flag = false;
 		UserVO result = dao.selectOne(vo);
+		
 		if (result != null)
 			if (result.getId().equals(vo.getId()) && result.getPwd().equals(vo.getPwd()))
 				flag = true;
@@ -81,7 +83,8 @@ public class Controller {
 		ModelAndView mv;
 		if (flag) {
 			mv = new ModelAndView("login/login");
-			mv.addObject("vo", vo);
+			mv.addObject("name", result.getName());
+			mv.addObject("result", result);
 		} else {
 			mv = new ModelAndView("login/login_form");
 			mv.addObject("result", "fail");

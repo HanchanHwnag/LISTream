@@ -355,9 +355,7 @@ input[type="range"] {
 				<input class="bar" data-attr="rangeVolume" type="range" min="0"
 					max="1" step="0.1" value="0.7" />
 				</div>
-			
 			</ul>
-			
 			<div class="progress">
 				<div data-attr="seekableTrack" class="seekableTrack"></div>
 				<div class="updateProgress"></div>
