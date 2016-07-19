@@ -32,11 +32,34 @@
 	});
 function start_go(){
 	
+	
+	
+	
 		function show() {
 			document.getElementById("listContainer").classList.toggle("show");
 		}
 
+		
 		$(document).ready(function() {
+			$(function() {
+				
+				var co = "\'${login_vo.user_info_code}\'";
+				$.ajax({
+					url: "/LISTream/playerTest/select_musics_to_play.do",
+					data: {"playerlist_code":co},
+					type: "post",
+					dataType: "html",
+					contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+					success: function(data){
+						$("#playListContainer").html(data);
+					},
+					error: function(request,status,error){
+						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					}
+				});
+				});
+			
+			
 			$("#playListContainer").audioControls({
 				autoPlay : false,
 				timer : 'increment',
@@ -58,6 +81,8 @@ function start_go(){
 					}
 				}
 			});
+			
+			
 		});
 }
 </script>
@@ -452,7 +477,7 @@ iframe {
 <body onload="start_go()">
 	<iframe src="../music/search_music.jsp"></iframe>
 	<div class= "headerbar">
-		<a style="font-size: 30px; padding: 20px;"><%=name %>님 page</a>
+		<a style="font-size: 30px; padding: 20px;">${login_vo.name } 님 page</a>
 		<div style=" float:right; right:40px;">
 			<a style=" color:white">[개인정보수정]</a> ||
 			<a style="color:white">[log-out]&nbsp;&nbsp;&nbsp;</a>
@@ -509,6 +534,7 @@ iframe {
 	</div>
 	
 		<input type="button" id="addMusic" value="재생">
+		 <p> idx= ${login_vo.user_info_code}</p> 
 	
 </body>
 </html>

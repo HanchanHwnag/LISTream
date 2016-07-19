@@ -19,30 +19,33 @@
 </script>
 </head>
 <body>
- 	 <jsp:useBean id="result" class="spring.project.db.UserVO" />
-	 <jsp:setProperty property="*" name="result" />
-	 <%-- ${vo.id}
+	<jsp:useBean id="vo" class="spring.project.db.UserVO" />
+	<jsp:setProperty property="*" name="vo" />
+	<%-- ${vo.id}
 	<br /> ${vo.pwd}
 	<br /> --%>
 	<c:choose>
 		<c:when
 			test="${vo.id == 'admin1' || vo.id == 'admin2' || vo.id == 'admin3' || vo.id == 'admin4' || vo.id == 'admin5'}">
+			<script type="text/javascript">
+				alert('${login_vo.id}');
+			</script>
 			<input type="button" onclick="go_music_register()" value="음악 등록">
 			<input type="button" onclick="go_manage_user()" value="회원 관리">
 		</c:when>
 		<c:otherwise>
-
+				${login_vo.id } </br>
+				${login_vo.name } </br>
 			<%
-			
-						/* session.setAttribute("id", result.getId()); */
-						System.out.println(result.getId());
-						System.out.println(result.getName());
-						System.out.println(result.getUser_info_code());
-/* 						session.setAttribute("id", vo.getId());
-						session.setAttribute("code", vo.getUser_info_code());
-						response.sendRedirect("../playerTest/main.jsp");
-						System.out.println(vo.getName() + "vo.getname"); */
-								
+			response.sendRedirect("../playerTest/main.jsp");
+				/* session.setAttribute("id", result.getId()); */
+						System.out.println(vo.getId());
+						System.out.println(vo.getName());
+						System.out.println(vo.getUser_info_code());
+						/* 						session.setAttribute("id", vo.getId());
+												session.setAttribute("code", vo.getUser_info_code());
+												
+												System.out.println(vo.getName() + "vo.getname"); */
 			%>
 		</c:otherwise>
 	</c:choose>

@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartRequest;
@@ -49,6 +50,7 @@ import spring.project.db.Page;
 import spring.project.db.UserVO;
 
 @org.springframework.stereotype.Controller
+@SessionAttributes("login_vo")
 public class Controller {
 	private Dao dao;
 	private Page page;
@@ -76,6 +78,7 @@ public class Controller {
 		boolean flag = false;
 		UserVO result = dao.selectOne(vo);
 		
+		
 		if (result != null)
 			if (result.getId().equals(vo.getId()) && result.getPwd().equals(vo.getPwd()))
 				flag = true;
@@ -83,8 +86,10 @@ public class Controller {
 		ModelAndView mv;
 		if (flag) {
 			mv = new ModelAndView("login/login");
-			mv.addObject("name", result.getName());
-			mv.addObject("result", result);
+			mv.addObject("login_vo", result);
+			/*mv.addObject("result", result);*/
+			
+			
 		} else {
 			mv = new ModelAndView("login/login_form");
 			mv.addObject("result", "fail");
@@ -323,10 +328,10 @@ public class Controller {
 	@RequestMapping(value = "playerTest/select_musics_to_play.do",produces = "text/html;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String selectMusicsToPlay(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("Controller in");
+	/*	System.out.println("Controller in");*/
 		String playlist_code = request.getParameter("playlist_code");
 		List<MusicVO> list =dao.selectMusicsToPlay(playlist_code);
-		System.out.println("1");
+		/*System.out.println("1");*/
 		String result="";
 		if(list.size()==0||list==null){
 			result+="<li data-src='"+"'>재생할 음악이 없습니다</li>";
