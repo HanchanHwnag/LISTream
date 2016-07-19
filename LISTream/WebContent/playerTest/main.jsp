@@ -1,60 +1,89 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%request.setCharacterEncoding("utf-8"); %>
+<%String name = (String)session.getAttribute("name"); %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <script src="../js/jquery-3.0.0.js"></script>
 <script src="../js/jquery.audioControls.min.js"></script>
-<script type="text/javascript">
-
-
-$(function(){
-	$("#addMusic").click(function(){
-		$.ajax({
-			url: "/LISTream/playerTest/select_musics_to_play.do",
-			data: {"playerlist_code":"32"},
-			type: "post",
-			dataType: "html",
-			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-			success: function(data){
-				$("#playListContainer").html(data);
-			},
-			error: function(request,status,error){
-				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-			}
-		});
-	});
-});
-	function show() {
-		document.getElementById("listContainer").classList.toggle("show");
-	}
-
-	$(document).ready(function() {
-		$("#playListContainer").audioControls({
-			autoPlay : false,
-			timer : 'increment',
-			onAudioChange : function(response) {
-				$('.songPlay').text(response.title + ' ...'); //Song title information
-			},
-			onVolumeChange : function(vol) {
-				var obj = $('.volume');
-				if (vol <= 0) {
-					obj.attr('class', 'volume mute');
-				} else if (vol <= 33) {
-					obj.attr('class', 'volume volume1');
-				} else if (vol > 33 && vol <= 66) {
-					obj.attr('class', 'volume volume2');
-				} else if (vol > 66) {
-					obj.attr('class', 'volume volume3');
-				} else {
-					obj.attr('class', 'volume volume1');
+<script type="text/javascript">	$(function(){
+		$("#addMusic").click(function(){
+			var co = "\'32\'";
+			$.ajax({
+				url: "/LISTream/playerTest/select_musics_to_play.do",
+				data: {"playerlist_code":co},
+				type: "post",
+				dataType: "html",
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function(data){
+					$("#playListContainer").html(data);
+				},
+				error: function(request,status,error){
+					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 				}
-			}
+			});
 		});
 	});
+function start_go(){
+	
+	
+	
+	
+		function show() {
+			document.getElementById("listContainer").classList.toggle("show");
+		}
+
+		
+		$(document).ready(function() {
+			$(function() {
+				
+				var co = "\'${login_vo.user_info_code}\'";
+				$.ajax({
+					url: "/LISTream/playerTest/select_musics_to_play.do",
+					data: {"playerlist_code":co},
+					type: "post",
+					dataType: "html",
+					contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+					success: function(data){
+						$("#playListContainer").html(data);
+					},
+					error: function(request,status,error){
+						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					}
+				});
+				});
+			
+			
+			$("#playListContainer").audioControls({
+				autoPlay : false,
+				timer : 'increment',
+				onAudioChange : function(response) {
+					$('.songPlay').text(response.title + ' ...'); //Song title information
+				},
+				onVolumeChange : function(vol) {
+					var obj = $('.volume');
+					if (vol <= 0) {
+						obj.attr('class', 'volume mute');
+					} else if (vol <= 33) {
+						obj.attr('class', 'volume volume1');
+					} else if (vol > 33 && vol <= 66) {
+						obj.attr('class', 'volume volume2');
+					} else if (vol > 66) {
+						obj.attr('class', 'volume volume3');
+					} else {
+						obj.attr('class', 'volume volume1');
+					}
+				}
+			});
+			
+			
+		});
+}
 </script>
 
 <style type="text/css">
@@ -163,7 +192,7 @@ ul, li {
 	display: inline-block;
 	text-align: center;
 	margin-top: 8px;
-	margin-left: 60px
+	margin-left: 20px
 }
 
 .controls li a {
@@ -342,7 +371,7 @@ input[type="range"] {
 	font-size: 12px;
 	padding: 16px;
 	float: left;
-	width: 15%;
+	width: 25%;
 }
 
 .audioTime {
@@ -390,15 +419,84 @@ input[type="range"] {
 .show {
 	display: none;
 }
+
+
+iframe {
+	border: none;
+	position: fixed;
+	left: 200px;
+	top:100px;
+	width: 80%;
+	height: 80%;
+	z-index: 0;
+}
+
+.sidemenu{
+	margin : 20px;
+	background-color: #333333;
+
+	width: 180px;
+	/* border-top-left-radius: 10px;
+	border-top-right-radius: 10px; */
+	border-radius: 10px 10px 10px 10px;
+}
+.sidemenu li{
+ 	color: white;
+	width : 100%;
+	padding-top:20px;
+	padding-bottom:20px;
+	
+	margin: 0px;
+	position:relative;
+	text-align: center;
+	/* background-color: skyblue; */
+}
+.sidemenu li:hover{
+	background-color: #00bd9b;
+}
+.headerbar{
+	width: 95%;
+	height: 80px;
+	margin-top: 20px;
+	margin-right: 20px;
+	margin-left: 20px;
+	background-color: #333333;
+	color: white;
+	
+	border-radius: 10px 10px 10px 10px;
+	
+}
+/* .headerbar a{
+	padding: 20px;
+}
+ */
 </style>
 
 </head>
-<body style="background-color: red;">
+<body onload="start_go()">
+	<iframe src="../music/search_music.jsp"></iframe>
+	<div class= "headerbar">
+		<a style="font-size: 30px; padding: 20px;">${login_vo.name } 님 page</a>
+		<div style=" float:right; right:40px;">
+			<a style=" color:white">[개인정보수정]</a> ||
+			<a style="color:white">[log-out]&nbsp;&nbsp;&nbsp;</a>
+		</div>
+	</div>
+	<div>
+	<ul class="sidemenu">
+		<li style=" border-top-left-radius: 10px;
+	border-top-right-radius: 10px; color: white;"><p>검색</p></li>
+		<li><a>장르별</a></li>
+		<li><a></a></li>
+		<li><button>2</button></li>
+		<li style = "border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;"><button>2</button></li>
+	</ul>
+	</div>
 	<div id="" class="rb">
 		<div id="listContainer" class="playlistContainer">
 			<ul id="playListContainer">
 				<li data-src="">재생할 음악이 없습니다</li>
-				<li data-src="../musics/Avicii - 01 - Wake Me Up (Radio Edit) - 192k.mp3"><a href="#">Can`t Stop Me (Club Mix)</a></li>
 			</ul>
 		</div>
 
@@ -433,11 +531,9 @@ input[type="range"] {
 			</div>
 		</div>
 	</div>
-	<div id="aa">
+	
 		<input type="button" id="addMusic" value="재생">
-		<p>1</p>
-		<p>2</p>
-		<p>3</p>
-	</div>
+		 <p> idx= ${login_vo.user_info_code}</p> 
+	
 </body>
 </html>
