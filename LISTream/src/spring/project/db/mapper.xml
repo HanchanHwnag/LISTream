@@ -95,4 +95,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				(select * from music where genre_code = #{genre} and lower(${field}) = lower(#{search_text}) order by music_hit desc) a)
 			) where r_num between #{begin} and #{end} 
 	</select>
+	<!-- PlayList -->
+	<select id="selectPlayListList" resultType="spring.project.db.PlayListVO" parameterType="java.lang.String">
+		select distinct playlist_code, playlist_title, playlist.user_info_code, playlist.hit 
+			from playlist, user_info where playlist.user_info_code = user_info.user_info_code 
+				and user_info.id = #{id}
+	</select>
 </mapper>

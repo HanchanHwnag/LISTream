@@ -86,4 +86,8 @@ public class Dao {
 	public List<MusicVO> selectMusicByGenreAndTitle(Map<String, String> search_map){
 		return template.selectList("selectMusicByGenreAndTitle", search_map);
 	}
+	// 플레이리스트_리스트 출력
+	public List<PlayListVO> selectPlayList(String id){
+		return template.selectList("selectPlayListList", id);
+	}
 }

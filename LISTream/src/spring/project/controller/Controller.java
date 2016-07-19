@@ -35,11 +35,13 @@ import spring.project.db.Dao;
 import spring.project.db.GenreVO;
 import spring.project.db.MusicVO;
 import spring.project.db.Page;
+import spring.project.db.PlayListVO;
 import spring.project.db.UserVO;
 
 @org.springframework.stereotype.Controller
 @SessionAttributes("login_vo")
 public class Controller {
+	static String session_id;
 	private Dao dao;
 	private Page page;
 	
@@ -62,6 +64,7 @@ public class Controller {
 		if(flag){
 			mv = new ModelAndView("login/login");
 			mv.addObject("login_vo", result);
+			session_id = result.getId();
 		} else {
 			mv = new ModelAndView("login/login_form");
 			mv.addObject("result", "fail");
@@ -320,5 +323,33 @@ public class Controller {
 		mv.addObject("type", type);
 		return mv;
 	}
+	
+	// 플레이 리스트
+	@RequestMapping("music/playlist.do")
+	public ModelAndView select_playlist(){
+		ModelAndView mv = new ModelAndView("music/playlist_list");
+		
+		// 임의(수정)
+		List<PlayListVO> list = dao.selectPlayList("aaaa");
+		String result = "[";
+		
+		int idx = 0;
+		for(PlayListVO pvo : list){
+			idx++;
+			result += "{";
+			result += "\"playlist_code\" : \"" + pvo.getPlaylist_code() + "\",";
+			result += "\"playlist_title\" : \"" + pvo.getPlaylist_title() + "\",";
+			result += "\"user_info_code\" : \"" + pvo.getUser_info_code() + "\",";
+			result += "\"hit\" : \"" + pvo.getHit() + "\"";
+			result += "}";
+			if(idx != list.size())
+				result += ",";
+		}
+		result += "]";
+		
+		mv.addObject("result", result);
+		return mv;
+	}
+	
 }
 
