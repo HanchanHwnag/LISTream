@@ -49,10 +49,25 @@
 			});
 		});
 	});
+	$(document).ready(function() {
+		$("#checkall").click(function() {
+			if ($("#checkall").prop("checked")) {
+				$("input[name=chk]").prop("checked", true);
+			} else {
+				$("input[name=chk]").prop("checked", false);
+			}
+		})
+	})
+	function insert_go(f) {
+		f.action="insert.do";
+		f.submit();
+	}
 </script>
 </head>
 	<body>
-		<input type="text" id="search" size="30" placeholder="music_title" value="${music_title}"><input id="serachBtn" type="button" value="Search"/>
+	<form name="input_form">
+		<input type="text" id="search" size="30" placeholder="music_title" value="${music_title}">
+		<input id="serachBtn" type="button" value="Search"/>
 		<div id="search_div"></div>
 		<c:if test="${!empty list}">
 			<table>
@@ -61,6 +76,7 @@
 					<th>아티스트</th>
 					<th>제목</th>
 					<th>조회수</th>
+					<th><input type="checkbox" name="all" id="checkall">전체선택</th>
 				</tr>
 				<c:forEach var="k" items="${list}" varStatus="status">
 					<tr>
@@ -68,9 +84,13 @@
 						<td>${k.artist}</td>
 						<td>${k.music_title}</td>
 						<td>${k.music_hit}</td>
-					</tr>
-				</c:forEach>
-			</table>
+						<td><input type="checkbox" name="chk" /></td>
+						<td><input type="button" name="play" value="듣기" /></td>
+						<td><input type="button" name="put" value="담기" onclick="insert_go(this.from)"/></td>
+					</tr>															
+				</c:forEach>				
+			</table>			
 		</c:if>
+		</form>
 	</body>
 </html>

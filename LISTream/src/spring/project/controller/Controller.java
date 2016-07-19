@@ -18,6 +18,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
+import org.apache.jasper.tagplugins.jstl.core.Redirect;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import spring.project.db.Dao;
 import spring.project.db.GenreVO;
+import spring.project.db.MusicListVO;
 import spring.project.db.MusicVO;
 import spring.project.db.Page;
 import spring.project.db.UserVO;
@@ -44,7 +46,7 @@ public class Controller {
 	public Page getPage() { return page; }
 	public void setPage(Page page) { this.page = page; }
 	
-	// ë¡œê·¸ì¸
+	// ·Î±×ÀÎ
 	@RequestMapping("login/login.do")
 	public ModelAndView login(UserVO vo){
 		
@@ -65,7 +67,7 @@ public class Controller {
 		
 		return mv;
 	}
-	// íšŒì›ê°€ì… í™”ë©´
+	// È¸¿ø°¡ÀÔ È­¸é
 	@RequestMapping("login/register_view.do")
 	public ModelAndView register_view(){
 		ModelAndView mv = new ModelAndView("login/user_register_user");
@@ -74,13 +76,13 @@ public class Controller {
 		mv.addObject("list", list);
 		return mv;
 	}
-	// íšŒì› ê°€ì…
+	// È¸¿ø °¡ÀÔ
 	@RequestMapping("login/register_ok.do")
 	public ModelAndView register_ok(UserVO vo){
 		dao.insertOne(vo);
 		return new ModelAndView("login/login_form");
 	}
-	// ì¥ë¥´ ë°ì´í„°
+	// Àå¸£ µ¥ÀÌÅÍ
 	@RequestMapping(value="login/genre.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
 	@ResponseBody
 	public String genre_ok(HttpServletResponse response) throws Exception {
@@ -104,7 +106,7 @@ public class Controller {
 	public ModelAndView music_view(){
 		return new ModelAndView("admin/admin_register_music");
 	}
-	// ìŒì•… ë“±ë¡
+	// À½¾Ç µî·Ï
 	@RequestMapping("login/register_music.do")
 	public ModelAndView register_music(HttpServletRequest request) throws Exception {
 		request.setCharacterEncoding("utf-8");
@@ -124,7 +126,7 @@ public class Controller {
 			if(multipartFile.isEmpty() == false){
 				fileName = multipartFile.getOriginalFilename();
 				file = new File(filePath + fileName);
-				multipartFile.transferTo(file); // íŒŒì¼ ì—…ë¡œë“œ
+				multipartFile.transferTo(file); // ÆÄÀÏ ¾÷·Îµå
 				
 				mvo.setArtist(multipartHttpServletRequest.getParameter("artist"));
 				mvo.setMusic_title(multipartHttpServletRequest.getParameter("music_title"));
@@ -137,7 +139,7 @@ public class Controller {
 		
 		return new ModelAndView("admin/admin_register_music");
 	}
-	// íšŒì› ê´€ë¦¬ í˜ì´ì§€
+	// È¸¿ø °ü¸® ÆäÀÌÁö
 	@RequestMapping("login/user_list_view.do")
 	public ModelAndView user_list(HttpServletRequest request) throws Exception{
 		request.setCharacterEncoding("utf-8");
@@ -179,7 +181,7 @@ public class Controller {
 		mv.addObject("list", list);
 		return mv; 
 	}
-	// ìœ ì € ì‚­ì œ
+	// À¯Àú »èÁ¦
 	@RequestMapping(value="login/delete_user.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
 	@ResponseBody
 	public String delete_user(HttpServletRequest request){
@@ -196,7 +198,7 @@ public class Controller {
 		return res;
 	}
 	/*---------------------------------------------------------------------------------------------*/
-	// ìŒì•… ê²€ìƒ‰
+	// À½¾Ç °Ë»ö
 	@RequestMapping(value="music/search_music.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
 	public ModelAndView search_music(HttpServletRequest request){
 		ModelAndView mv = new ModelAndView("music/music_list");
@@ -235,5 +237,15 @@ public class Controller {
 		mv.addObject("list", list);
 		mv.addObject("music_title", request.getParameter("music_title"));
 		return mv;
+	}
+	@RequestMapping("/insert.do")
+	public ModelAndView insert(MusicListVO vo){
+		
+		ModelAndView mv = new ModelAndView("redirect:/musiclist.do");
+		dao.getInsert(vo);
+		return mv;
+	}
+	@RequestMapping("/musiclist_do")
+		
 	}
 }

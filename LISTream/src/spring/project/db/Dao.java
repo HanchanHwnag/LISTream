@@ -17,39 +17,39 @@ public class Dao {
 		this.template = template;
 	}
 	
-	// ìœ ì € ë°ì´í„° ëª¨ë‘ ê°€ì ¸ì˜¤ê¸°
+	// À¯Àú µ¥ÀÌÅÍ ¸ğµÎ °¡Á®¿À±â
 	public List<UserVO> selectAll(){
 		return template.selectList("selectAll");
 	}
-	// ìœ ì € í•˜ë‚˜ ì½ì–´ì˜¤ê¸°
+	// À¯Àú ÇÏ³ª ÀĞ¾î¿À±â
 	public UserVO selectOne(UserVO vo){
 		return template.selectOne("selectOne", vo.getId());
 	}
-	// ìœ ì € í•˜ë‚˜ ì‚½ì…
+	// À¯Àú ÇÏ³ª »ğÀÔ
 	public void insertOne(UserVO vo){
 		template.insert("insertOne", vo);
 	}
-	// ì¥ë¥´ ê°€ì ¸ì˜¤ê¸°
+	// Àå¸£ °¡Á®¿À±â
 	public List<GenreVO> selectGenre(){
 		return template.selectList("selectGenre");
 	}
-	// ìŒì•… ì‚½ì…
+	// À½¾Ç »ğÀÔ
 	public void insertMusic(MusicVO mvo){
 		template.insert("insertMusic", mvo);
 	}
-	// ì´ ìœ ì €ìˆ˜
+	// ÃÑ À¯Àú¼ö
 	public int userTotalCount(){
 		return template.selectOne("userTotalCount");
 	}
-	// í•´ë‹¹ ìœ ì € ê²€ìƒ‰
+	// ÇØ´ç À¯Àú °Ë»ö
 	public List<UserVO> selectUser(Map<String, Integer> map){
 		return template.selectList("selectUser", map);
 	}
-	// ìœ ì € ì‚­ì œ
+	// À¯Àú »èÁ¦
 	public void deleteUser(String str){
 		template.delete("deleteUser", str);
 	}
-	// ìœ ì € ê²€ìƒ‰
+	// À¯Àú °Ë»ö
 	public List<UserVO> searchUser(String id){
 		return template.selectList("searchUser", id);
 	}
@@ -59,5 +59,18 @@ public class Dao {
 	}
 	public List<MusicVO> selectMusic(String music_title){
 		return template.selectList("selectMusic", music_title);
+	}
+	public MusicListVO getInsert(MusicListVO mlvo) {
+		try {
+		int result = template.insert("insertMusicList", mlvo);
+		if(result > 0){
+			template.commit();
+		}else{
+			template.rollback();
+		}
+	} catch (Exception e) {
+		
+	}
+	return mlvo;
 	}
 }
