@@ -192,7 +192,7 @@ div#makeplaylistform{
 <script type="text/javascript">
 	var playlist_code=0;
 	var title="";
-	var user_info_code="2";
+	var user_info_code=${login_vo.user_info_code};
 	var dfdf="이건테스트변수";
 	
 
@@ -428,7 +428,7 @@ function getPlaylist(){
 			<input type="text" name="playlist_title">
 			<select name="theme_code" id="themelist">
 			</select>
-			<input type="hidden" name="user_info_code" value="2">
+			<input type="hidden" name="user_info_code" value="${login_vo.user_info_code }">
 		</form>		
 		<input style="float:left;" type="button" value="만들기" id="makeplaylistbutton"/>			
 		<input style="float:left;" type="button" value="창닫기" id="close"> 	

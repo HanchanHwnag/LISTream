@@ -3,8 +3,6 @@
 	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%request.setCharacterEncoding("utf-8"); %>
-<%String name = (String)session.getAttribute("name"); %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12,7 +10,11 @@
 <script src="../js/jquery-3.0.0.js"></script>
 <script src="../js/jquery.audioControls.min.js"></script>
 <script type="text/javascript">	
+
 	$(function(){
+		$("#myMusic").click(function(){
+			$("#frame")
+		})
 		$("#addMusic").click(function(){
 			var co = "\'2\'";
 			$.ajax({
@@ -486,20 +488,20 @@ iframe {
 
 </head>
 <body onload="start_go()">
-	<iframe src="../music/search_music.jsp"></iframe>
+	<iframe name="frame" id="frame" src="../music/search_music.jsp"></iframe>
 	<div class= "headerbar">
 		<a style="font-size: 30px; padding: 20px;">${login_vo.name } 님 page</a>
 		<div style=" float:right; right:40px;">
 			<a style=" color:white">[개인정보수정]</a> ||
-			<a style="color:white">[log-out]&nbsp;&nbsp;&nbsp;</a>
+			<a style="color:white" href="../login/login_form.jsp">[log-out]&nbsp;&nbsp;&nbsp;</a>
 		</div>
 	</div>
 	<div>
 	<ul class="sidemenu">
 		<li style=" border-top-left-radius: 10px;
-	border-top-right-radius: 10px; color: white;"><p>검색</p></li>
+	border-top-right-radius: 10px; color: white;"><p><a href="../music/search_music.jsp" target="frame">검색</a></p></li>
 		<li><a>장르별</a></li>
-		<li><a></a></li>
+		<li id="myMusic"><a href="../mymusic/mymusic.jsp" target="frame">내 노래</a></li>
 		<li><button>2</button></li>
 		<li style = "border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;"><button>2</button></li>
