@@ -1,7 +1,9 @@
 package spring.project.db;
 
 public class MusicVO {
-	private String r_num,music_code, artist, music_title, path, music_hit, music_regdate, genre_code,playtime,musiclist_code;
+	private String r_num,music_code, artist, music_title, path, 
+					music_hit, music_regdate, genre_code,playtime,
+					musiclist_code;
 
 	public String getMusic_code() {
 		return music_code;

@@ -10,92 +10,88 @@
 <script src="../js/jquery-3.0.0.js"></script>
 <script src="../js/jquery.audioControls.min.js"></script>
 <script type="text/javascript">	
-
-	$(function(){
-		$("#myMusic").click(function(){
-			$("#frame")
-		})
-		$("#addMusic").click(function(){
-			var co = "\'2\'";
-			$.ajax({
-				url: "/LISTream/playerTest/select_musics_to_play.do",
-				data: {"playerlist_code":co},
-				type: "post",
-				dataType: "html",
-				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-				success: function(data){
-					$("#playListContainer").html(data);
-					$("#playListContainer").audioControls({
-						autoPlay : false,
-						timer : 'increment',
-						onAudioChange : function(response) {
-							$('.songPlay').text(response.title + ' ...'); //Song title information
-						},
-						onVolumeChange : function(vol) {
-							var obj = $('.volume');
-							if (vol <= 0) {
-								obj.attr('class', 'volume mute');
-							} else if (vol <= 33) {
-								obj.attr('class', 'volume volume1');
-							} else if (vol > 33 && vol <= 66) {
-								obj.attr('class', 'volume volume2');
-							} else if (vol > 66) {
-								obj.attr('class', 'volume volume3');
-							} else {
-								obj.attr('class', 'volume volume1');
-							}
+function getCodeAndPlay(playlist_code){
+	$(document).ready(function() {
+		$.ajax({
+			url: "select_musics_to_play.do",
+			data: {'playlist_code':playlist_code},
+			type: "get",
+			dataType: "html",
+			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+			success: function(data){
+				$("#playListContainer").html(data);
+				$("#playListContainer").audioControls({
+					autoPlay : false,
+					timer : 'increment',
+					onAudioChange : function(response) {
+						$('.songPlay').text(response.title + ' ...'); //Song title information
+					},
+					onVolumeChange : function(vol) {
+						var obj = $('.volume');
+						if (vol <= 0) {
+							obj.attr('class', 'volume mute');
+						} else if (vol <= 33) {
+							obj.attr('class', 'volume volume1');
+						} else if (vol > 33 && vol <= 66) {
+							obj.attr('class', 'volume volume2');
+						} else if (vol > 66) {
+							obj.attr('class', 'volume volume3');
+						} else {
+							obj.attr('class', 'volume volume1');
 						}
-					});
-				},
-				error: function(request,status,error){
-					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-				}
-			});
+					}
+				});
+			},
+			error: function(request,status,error){
+				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			}
 		});
+				
 	});
+}
 function start_go(){
 		function show() {
 			document.getElementById("listContainer").classList.toggle("show");
 		}
 		$(document).ready(function() {
 			$(function() {
-				var co = "\'${login_vo.user_info_code}\'";
+				var playlist_code = 
 					$.ajax({
-						url: "/LISTream/playerTest/select_musics_to_play.do",
-						data: {"playerlist_code":co},
-						type: "post",
+						url: "select_musics_to_play.do",
+						data: {'playlist_code':"3"},
+						type: "get",
 						dataType: "html",
 						contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 						success: function(data){
 							$("#playListContainer").html(data);
-							$("#playlistContainer").audioControls({});
+							$("#playListContainer").audioControls({
+								autoPlay : false,
+								timer : 'increment',
+								onAudioChange : function(response) {
+									$('.songPlay').text(response.title + ' ...'); //Song title information
+								},
+								onVolumeChange : function(vol) {
+									var obj = $('.volume');
+									if (vol <= 0) {
+										obj.attr('class', 'volume mute');
+									} else if (vol <= 33) {
+										obj.attr('class', 'volume volume1');
+									} else if (vol > 33 && vol <= 66) {
+										obj.attr('class', 'volume volume2');
+									} else if (vol > 66) {
+										obj.attr('class', 'volume volume3');
+									} else {
+										obj.attr('class', 'volume volume1');
+									}
+								}
+							});
 						},
 						error: function(request,status,error){
 							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 						}
 					});
 				});
-			$("#playListContainer").audioControls({
-				autoPlay : false,
-				timer : 'increment',
-				onAudioChange : function(response) {
-					$('.songPlay').text(response.title + ' ...'); //Song title information
-				},
-				onVolumeChange : function(vol) {
-					var obj = $('.volume');
-					if (vol <= 0) {
-						obj.attr('class', 'volume mute');
-					} else if (vol <= 33) {
-						obj.attr('class', 'volume volume1');
-					} else if (vol > 33 && vol <= 66) {
-						obj.attr('class', 'volume volume2');
-					} else if (vol > 66) {
-						obj.attr('class', 'volume volume3');
-					} else {
-						obj.attr('class', 'volume volume1');
-					}
-				}
-			});
+			
 		});
 }
 </script>
@@ -507,10 +503,12 @@ iframe {
 	border-bottom-right-radius: 10px;"><button>2</button></li>
 	</ul>
 	</div>
-	<div id="" class="rb">
+	<div id="playerDiv1">
+	<div id="playerDiv2">
 		<div id="listContainer" class="playlistContainer">
 			<ul id="playListContainer">
 				<li data-src="">재생할 음악이 없습니다</li>
+				<li data-src='../musics/Benny Benassi - 03 - Cinema (Radio Edit) (Feat. Gary Go) - 192k.mp3'><a href='#'>Cinema (Radio Edit) (Feat. Gary Go)</a></li>
 			</ul>
 		</div>
 
@@ -544,6 +542,7 @@ iframe {
 
 			</div>
 		</div>
+	</div>
 	</div>
 	
 		<input type="button" id="addMusic" value="재생">

@@ -252,6 +252,11 @@ $(function(){
 			 }		
 		});	
 	});//노래삭제 click 이벤트
+	
+	//플레이리스트 재생 버튼 클릭
+	$("#playMusic").click(function(){
+		parent.getCodeAndPlay(playlist_code);
+	});
 
 	
 	

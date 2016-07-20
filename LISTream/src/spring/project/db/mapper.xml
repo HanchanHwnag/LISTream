@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT m.music_code,m.artist,m.music_title,m.path,m.music_hit,m.music_regdate,m.genre_code,m.playtime
 		FROM musiclist L JOIN music M
 		ON (L.music_code=M.music_code)
-		WHERE playlist_code=2<!-- #{playlist_code} -->
+		WHERE playlist_code=#{playlist_code}
 	</select>
 	<!-- 음악 검색 < 7(ajax) -->
 	<select id="searchMusic" resultType="spring.project.db.MusicVO" parameterType="java.util.Map">
