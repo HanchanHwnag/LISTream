@@ -48,8 +48,12 @@ import spring.project.db.Dao;
 import spring.project.db.GenreVO;
 import spring.project.db.MusicVO;
 import spring.project.db.Page;
+import spring.project.db.PlayListVO;
+import spring.project.db.ThemeVO;
 import spring.project.db.UserVO;
 
+
+//start
 @org.springframework.stereotype.Controller
 @SessionAttributes("login_vo")
 public class Controller {
@@ -395,6 +399,182 @@ public class Controller {
 			System.out.println(result);
 			return result;
 		}
+		@RequestMapping("/mymusic/mymusic.do")
+		public ModelAndView myMusic(
+				@RequestParam(value="user_info_code" ,required = true, defaultValue="2") String user_info_code){		
+			
+			ModelAndView mv = new ModelAndView("mymusic/playlist");		
+		
+			Map<String,String> map =new HashMap<>(); 	
+			map.put("user_info_code", user_info_code);
+			
+			List<PlayListVO> list=dao.getPlayList(map);			
+			String playlists="<playlists>";		
+			for (PlayListVO k : list) {
+				playlists+="<playlist>";
+				playlists+="<playlist_code>"+k.getPlaylist_code()+"</playlist_code>";
+				playlists+="<playlist_title>"+k.getPlaylist_title()+"</playlist_title>";
+				playlists+="</playlist>";		
+			}			
+			
+			playlists+="</playlists>";			
+			mv.addObject("playlist",playlists);			
+			return mv;
+		}	
+
+
+		
+
+		@RequestMapping("/mymusic/musiclist.do")	
+		public ModelAndView getMusicList(
+				@RequestParam(value="user_info_code" ,required = true) String user_info_code,
+				@RequestParam(value="playlist_code") String playlist_code){
+			
+		
+			Map<String,String> map = new HashMap<>();
+			map.put("user_info_code", user_info_code);
+			map.put("playlist_code", playlist_code);
+			List<MusicVO> list=dao.getMusicList(map);		
+			String musiclist="<musiclist>";		
+			for (MusicVO k : list) {
+				musiclist+="<music>";			
+				musiclist+="<musiclist_code>"+k.getMusiclist_code()+"</musiclist_code>";
+				musiclist+="<music_code>"+k.getMusic_code()+"</music_code>";
+				musiclist+="<artist>"+k.getArtist()+"</artist>";
+				musiclist+="<music_title>"+k.getMusic_title()+"</music_title>";
+				musiclist+="</music>";		
+			}		
+			musiclist+="</musiclist>";		
+			ModelAndView mv=new ModelAndView("mymusic/musiclist");
+			mv.addObject("musiclist",musiclist);		
+			return mv;
+		}
+		
+		@RequestMapping("/mymusic/getTheme.do")
+		public ModelAndView getTheme(){
+			List<ThemeVO>list =dao.getThemeList();
+			ModelAndView mv=new ModelAndView("mymusic/themelist");
+			
+			String themelist="<themelist>";
+			for (ThemeVO k : list) {
+				themelist+="<theme>";
+				themelist+="<theme_code>"+k.getTheme_code()+"</theme_code>"; 
+				themelist+="<theme_name>"+k.getTheme_name()+"</theme_name>"; 
+				themelist+="</theme>";
+			}
+			themelist+="</themelist>";
+			
+			mv.addObject("themelist",themelist);	
+			return mv;		
+		}
+		
+		@RequestMapping("/mymusic/makePlaylist.do")
+		@ResponseBody
+		public String makePlaylist(String playlist_title, String theme_code,String user_info_code){
+			
+			
+			int result=dao.makePlaylist(user_info_code, playlist_title,theme_code);
+			String result1=String.valueOf(result);
+			
+			return result1;
+		}
+		
+		@RequestMapping("/mymusic/deletePlaylist.do")
+		@ResponseBody
+		public String deletePlaylist(String playlist_code,String user_info_code){
+			
+		
+			Map<String,String> map = new HashMap<>();
+			map.put("playlist_code", playlist_code);
+			map.put("user_info_code", user_info_code);
+			int result=dao.deletePlaylist(map);
+			String result1=String.valueOf(result);
+			return result1;
+		}
+		
+		@RequestMapping("/mymusic/deleteMusiclist.do")
+		@ResponseBody
+		public String deleteMusic(HttpServletRequest request){
+			
+			String[] musiclist_codes=request.getParameterValues("musiclist_codes[]");		
+			String playlist_code=request.getParameter("playlist_code");
+			String user_info_code=request.getParameter("user_info_code");
+			
+			Map<String,String> map = new HashMap<>();
+			map.put("playlist_code", playlist_code);
+			map.put("user_info_code", user_info_code);
+			int result=0;
+			for (int i = 0; i < musiclist_codes.length; i++) {			
+			
+				map.put("musiclist_code", musiclist_codes[i]);				
+				result=dao.deleteMusiclist(map);			
+				map.remove("musiclist_code");
+			}
+			String result1=String.valueOf(result);	
+		
+			
+		/*	ModelAndView mav = new ModelAndView("redirect:musiclist.do?playlist_code="+playlist_code);*/
+			return result1;
+		}
+		
+		@RequestMapping("/mymusic/getPlaylist.do")
+		public ModelAndView getPlaylist(
+				@RequestParam(value="user_info_code" ,required = true, defaultValue="2") String user_info_code,
+				@RequestParam(value="cPage",required=true,defaultValue="1") String cPage
+				){		
+			
+			
+			//////페이징////
+			page.setTotalRecord(dao.getTotalPlaylistCount(user_info_code));
+			page.setTotalPage();
+			page.setBegin((page.getNowPage()-1)*page.getNumPerPage() + 1);
+			page.setEnd(page.getBegin() + page.getNumPerPage() - 1);
+			if(page.getEnd() > page.getTotalRecord())
+				page.setEnd(page.getTotalRecord());		
+
+			page.setBeginPage((page.getNowPage()-1)/page.getPagePerBlock()*page.getPagePerBlock() + 1);
+			page.setEndPage(page.getBeginPage() + page.getPagePerBlock() - 1);
+			if(page.getEndPage() > page.getTotalPage())
+				page.setEndPage(page.getTotalPage());
+
+			//////////페이징	
+			
+			
+			Map<String,String> map = new HashMap<>();
+			
+			map.put("begin", String.valueOf(page.getBegin()));
+			map.put("end", String.valueOf(page.getEnd()));					
+			map.put("user_info_code", user_info_code);
+			
+			
+			
+			List<PlayListVO> list=dao.getPlayListPaging(map);			
+			String playlists="<playlists>";		
+			for (PlayListVO k : list) {
+				playlists+="<playlist>";
+				playlists+="<playlist_code>"+k.getPlaylist_code()+"</playlist_code>";
+				playlists+="<playlist_title>"+k.getPlaylist_title()+"</playlist_title>";
+				playlists+="</playlist>";		
+			}			
+			////페이징
+			playlists+="<page>";
+			playlists+="<beginpage>"+page.getBeginPage()+"</beginpage>";
+			playlists+="<endpage>"+page.getEndPage()+"</endpage>";
+			playlists+="<pageperblock>"+page.getPagePerBlock()+"</pageperblock>";
+			playlists+="<nowpage>"+page.getNowPage()+"</nowpage>";
+			playlists+="<totalpage>"+page.getTotalPage()+"</totalpage>";		
+			playlists+="</page>";
+			////페이징		
+			
+			playlists+="</playlists>";
+			
+		
+			
+			ModelAndView mv = new ModelAndView("mymusic/playlist");	
+			mv.addObject("playlist",playlists);			
+			return mv;
+		}	
+		
 }
 
 

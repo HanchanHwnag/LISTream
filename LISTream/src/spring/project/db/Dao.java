@@ -1,5 +1,6 @@
 package spring.project.db;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,5 +95,59 @@ public class Dao {
 	public List<MusicVO> selectMusicsToPlay(String playlist_code){
 		return template.selectList("selectMusicsToPlay", playlist_code);
 	}
+
+	//플레이리스트목록
+	public List<PlayListVO> getPlayList(Map<String,String> map){
+		List<PlayListVO> list =template.selectList("getPlayList",map);
+		return list;
+		
+	}
+	
+	//플레이리스트 갯수
+	public int getTotalPlaylistCount(String user_info_code){
+		int result = template.selectOne("getTotalPlaylistCount",user_info_code);
+		return result;
+	}
+
+	//플레이리스트당 뮤직리스트
+	public List<MusicVO> getMusicList(Map<String,String> map){
+		List<MusicVO> list=template.selectList("getMusicList",map);
+		return list;
+	}
+	
+	//플레이리스트 만들기
+	public int makePlaylist(String user_info_code,String playlist_title,String theme_code){
+		Map<String,String> map= new HashMap<>();
+		map.put("user_info_code", user_info_code);
+		map.put("playlist_title",playlist_title);
+		map.put("theme_code", theme_code);
+		int result=template.insert("makePlaylist",map);
+		return result;
+	}
+	
+	//테마목록가져오기
+	public List<ThemeVO> getThemeList(){
+		List<ThemeVO> list=template.selectList("getThemeList");
+		return list;
+	}
+	
+	//플레이리스트 한개 삭제
+	public int deletePlaylist(Map<String, String> map){
+		int result=template.delete("deletePlaylist",map);
+		return result;
+	}
+	
+	//뮤직삭제
+	public int deleteMusiclist(Map<String, String> map){
+		int result=template.delete("deleteMusiclist",map);
+		return result;
+	}
+	
+	//
+	public  List<PlayListVO> getPlayListPaging(Map<String,String> map){
+		List<PlayListVO> list = template.selectList("getPlayListPaging",map);
+		return list;
+	}
+	
 	
 }
