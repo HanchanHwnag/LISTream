@@ -240,7 +240,6 @@ public class Controller {
 	}
 	@RequestMapping("music/insert.do")
 	public ModelAndView insert(HttpServletRequest request){
-		System.out.println("Controller in");
 		String[] music_code = request.getParameterValues("chk");
 		String pcode = request.getParameter("playlist_code");
 		Map<String, String> map = new HashMap<>();
