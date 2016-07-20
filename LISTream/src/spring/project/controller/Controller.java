@@ -177,7 +177,7 @@ public class Controller {
 					mvo.setArtist(metadata.get("xmpDM:artist"));
 					mvo.setMusic_title(metadata.get("title"));
 					mvo.setPlaytime(metadata.get("xmpDM:duration"));
-					mvo.setPath(filePath + fileName);
+					mvo.setPath("../musics/" + fileName);
 					mvo.setGenre_code(genre_code);
 					System.out.println(mvo.getArtist()+" "+mvo.getMusic_title()+" "+mvo.getPlaytime()+" "+mvo.getPath()+" "+mvo.getGenre_code()+" ");
 					dao.insertMusic(mvo);

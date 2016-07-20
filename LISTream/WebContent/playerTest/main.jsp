@@ -14,7 +14,7 @@
 <script type="text/javascript">	
 	$(function(){
 		$("#addMusic").click(function(){
-			var co = "\'32\'";
+			var co = "\'2\'";
 			$.ajax({
 				url: "/LISTream/playerTest/select_musics_to_play.do",
 				data: {"playerlist_code":co},
@@ -23,6 +23,27 @@
 				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 				success: function(data){
 					$("#playListContainer").html(data);
+					$("#playListContainer").audioControls({
+						autoPlay : false,
+						timer : 'increment',
+						onAudioChange : function(response) {
+							$('.songPlay').text(response.title + ' ...'); //Song title information
+						},
+						onVolumeChange : function(vol) {
+							var obj = $('.volume');
+							if (vol <= 0) {
+								obj.attr('class', 'volume mute');
+							} else if (vol <= 33) {
+								obj.attr('class', 'volume volume1');
+							} else if (vol > 33 && vol <= 66) {
+								obj.attr('class', 'volume volume2');
+							} else if (vol > 66) {
+								obj.attr('class', 'volume volume3');
+							} else {
+								obj.attr('class', 'volume volume1');
+							}
+						}
+					});
 				},
 				error: function(request,status,error){
 					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -31,35 +52,27 @@
 		});
 	});
 function start_go(){
-	
-	
-	
-	
 		function show() {
 			document.getElementById("listContainer").classList.toggle("show");
 		}
-
-		
 		$(document).ready(function() {
 			$(function() {
-				
 				var co = "\'${login_vo.user_info_code}\'";
-				$.ajax({
-					url: "/LISTream/playerTest/select_musics_to_play.do",
-					data: {"playerlist_code":co},
-					type: "post",
-					dataType: "html",
-					contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-					success: function(data){
-						$("#playListContainer").html(data);
-					},
-					error: function(request,status,error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-					}
+					$.ajax({
+						url: "/LISTream/playerTest/select_musics_to_play.do",
+						data: {"playerlist_code":co},
+						type: "post",
+						dataType: "html",
+						contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+						success: function(data){
+							$("#playListContainer").html(data);
+							$("#playlistContainer").audioControls({});
+						},
+						error: function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+						}
+					});
 				});
-				});
-			
-			
 			$("#playListContainer").audioControls({
 				autoPlay : false,
 				timer : 'increment',
@@ -81,8 +94,6 @@ function start_go(){
 					}
 				}
 			});
-			
-			
 		});
 }
 </script>
