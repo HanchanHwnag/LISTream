@@ -513,8 +513,5 @@ iframe {
 		</div>
 	</div>
 	
-		<input type="button" id="addMusic" value="재생">
-		 <p> idx= ${login_vo.user_info_code}</p> 
-	
 </body>
 </html>
