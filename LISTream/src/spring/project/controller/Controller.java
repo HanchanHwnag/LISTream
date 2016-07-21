@@ -384,7 +384,7 @@ public class Controller {
 			String playlist_code = request.getParameter("playlist_code");
 			System.out.println("playerlist_code : "+playlist_code);
 			List<MusicVO> list =dao.selectMusicsToPlay(playlist_code);
-			String result="";
+			String result="<div id='listContainer' class='playlistContainer'><ul id='playListContainer'>";
 			if(list.size()==0||list==null){
 				result+="<li data-src='"+"'>재생할 음악이 없습니다</li>";
 			}else{
@@ -396,7 +396,7 @@ public class Controller {
 							+"</a></li>";
 				}
 			}
-			System.out.println(result);
+			result+="</ul></div><div class='containerPlayer'><div id='playerContainer'><ul class='controls'><div class='audioDetails'><span class='songPlay'></span> <span data-attr='timer' class='audioTime'></span></div><li><a href='#' class='shuffle shuffleActive' data-attr='shuffled'></a></li><li><a href='#' class='left' data-attr='prevAudio'></a></li><li><a href='#' id='playPause' class='play' data-attr='playPauseAudio'></a></li><li><a href='#' class='right' data-attr='nextAudio'></a></li><li><a href='#' class='repeat' data-attr='repeatSong'></a></li><li><a class='nowplay' onclick='show()'></a></li><div class='volumeControl'><div class='volume volume1'></div><input class='bar' data-attr='rangeVolume' type='range' min='0' max='1' step='0.1' value='0.7' /></div></ul><div class='progress'><div data-attr='seekableTrack' class='seekableTrack'></div><div class='updateProgress'></div></div></div></div>";
 			return result;
 		}
 		@RequestMapping("/mymusic/mymusic.do")

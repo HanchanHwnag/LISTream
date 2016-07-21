@@ -19,9 +19,14 @@ function getCodeAndPlay(playlist_code){
 			dataType: "html",
 			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 			success: function(data){
-				$("#playListContainer").html(data);
+
+				$("#playPause").click();
+				
+				$("#playerDiv2").remove();
+				$("#playerDiv1").html("<div id='playerDiv2'></div>");
+				$("#playerDiv2").html(data);
 				$("#playListContainer").audioControls({
-					autoPlay : false,
+					autoPlay : true,
 					timer : 'increment',
 					onAudioChange : function(response) {
 						$('.songPlay').text(response.title + ' ...'); //Song title information
@@ -63,7 +68,7 @@ function start_go(){
 						dataType: "html",
 						contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 						success: function(data){
-							$("#playListContainer").html(data);
+							$("#playerDiv2").html(data);
 							$("#playListContainer").audioControls({
 								autoPlay : false,
 								timer : 'increment',
@@ -504,45 +509,8 @@ iframe {
 	</ul>
 	</div>
 	<div id="playerDiv1">
-	<div id="playerDiv2">
-		<div id="listContainer" class="playlistContainer">
-			<ul id="playListContainer">
-				<li data-src="">재생할 음악이 없습니다</li>
-				<li data-src='../musics/Benny Benassi - 03 - Cinema (Radio Edit) (Feat. Gary Go) - 192k.mp3'><a href='#'>Cinema (Radio Edit) (Feat. Gary Go)</a></li>
-			</ul>
+		<div id="playerDiv2">
 		</div>
-
-		<div class="containerPlayer">
-
-			<div id="playerContainer">
-				<ul class="controls">
-					<div class="audioDetails">
-						<span class="songPlay"></span> <span data-attr="timer"
-							class="audioTime"></span>
-					</div>
-					<li><a href="#" class="shuffle shuffleActive"
-						data-attr="shuffled"></a></li>
-					<li><a href="#" class="left" data-attr="prevAudio"></a></li>
-					<li><a href="#" class="play" data-attr="playPauseAudio"></a></li>
-					<li><a href="#" class="right" data-attr="nextAudio"></a></li>
-					<li><a href="#" class="repeat" data-attr="repeatSong"></a></li>
-					<li><a class="nowplay" onclick="show()"></a></li>
-					<div class="volumeControl">
-						<div class="volume volume1"></div>
-						<input class="bar" data-attr="rangeVolume" type="range" min="0"
-							max="1" step="0.1" value="0.7" />
-					</div>
-
-				</ul>
-
-				<div class="progress">
-					<div data-attr="seekableTrack" class="seekableTrack"></div>
-					<div class="updateProgress"></div>
-				</div>
-
-			</div>
-		</div>
-	</div>
 	</div>
 	
 		<input type="button" id="addMusic" value="재생">
