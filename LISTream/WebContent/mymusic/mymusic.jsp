@@ -261,7 +261,7 @@ $(function(){
 	
 	
 	
-/* 	//플레이리스트 삭제이벤트
+ 	//플레이리스트 삭제이벤트
 	$(document).on("contextmenu",".plistli", function(e){
 
 		var result=confirm("삭제할까요?");
@@ -286,7 +286,7 @@ $(function(){
 		});
 
 	});//삭제끝
- */	 
+ 	 
 	 
 	 
 	//플레이리스트 눌렀을 때 노래 목록 가져오기
@@ -425,8 +425,8 @@ function getPlaylist(){
 </script>
 </head>
 
-<!--  <body oncontextmenu="return false;"> -->
- <body bgcolor="#444">
+  <body oncontextmenu="return false;"> 
+<!--  <body bgcolor="#444"> -->
 	<!--플레이리스트추가하기 DVI  -->
 	<div id="makeplaylistform">
 		<form id="makeform" style="float:left;">

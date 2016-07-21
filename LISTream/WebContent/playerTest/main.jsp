@@ -503,7 +503,8 @@ iframe {
 	border-top-right-radius: 10px; color: white;"><p><a href="../music/search_music.jsp" target="frame">검색</a></p></li>
 		<li><a>장르별</a></li>
 		<li id="myMusic"><a href="../mymusic/mymusic.jsp" target="frame">내 노래</a></li>
-		<li><button>2</button></li>
+		<li id="favorite"><a href="favorite.do" target="frame">즐겨찾기</a></li>
+		<li id="myMusic"><a href="../mymusic/mymusic.jsp" target="frame">플레이리스트보기</a></li>
 		<li style = "border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;"><button>2</button></li>
 	</ul>

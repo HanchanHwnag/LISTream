@@ -520,14 +520,14 @@ public class Controller {
 		
 		
 
-		@RequestMapping(value={"/mymusic/musiclist.do","/favorite/getMusiclist.do"})	
-		public ModelAndView getMusicList(
-				@RequestParam(value="user_info_code" ,required = true) String user_info_code,
+		@RequestMapping(value={"/mymusic/musiclist.do","/login/getMusiclist.do","/playerTest/getMusiclist.do"})	
+		public ModelAndView getMusicList(				
 				@RequestParam(value="playlist_code") String playlist_code){
 			
 		
 			Map<String,String> map = new HashMap<>();
-			map.put("user_info_code", user_info_code);
+		/*	map.put("user_info_code", user_info_code);*/
+			map.put("user_info_code", session_code);
 			map.put("playlist_code", playlist_code);
 			
 		
@@ -571,7 +571,8 @@ public class Controller {
 		public String makePlaylist(String playlist_title, String theme_code,String user_info_code){
 			
 			
-			int result=dao.makePlaylist(user_info_code, playlist_title,theme_code);
+			/*int result=dao.makePlaylist(user_info_code, playlist_title,theme_code);*/
+			int result=dao.makePlaylist(session_code, playlist_title,theme_code);
 			String result1=String.valueOf(result);
 			
 			return result1;
@@ -584,7 +585,8 @@ public class Controller {
 		
 			Map<String,String> map = new HashMap<>();
 			map.put("playlist_code", playlist_code);
-			map.put("user_info_code", user_info_code);
+			/*map.put("user_info_code", user_info_code);*/
+			map.put("user_info_code", session_code);
 			int result=dao.deletePlaylist(map);
 			String result1=String.valueOf(result);
 			return result1;
@@ -680,7 +682,7 @@ public class Controller {
 		//favorite
 		
 
-		@RequestMapping("/favorite/favorite.do")
+		@RequestMapping("/playerTest/favorite.do")
 		public ModelAndView getFavorite(
 				@RequestParam(value="user_info_code",required=false,defaultValue="2") String user_info_code,
 				@RequestParam(value="cPage", required=false,defaultValue="1") String cPage){
