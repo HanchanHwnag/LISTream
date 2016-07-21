@@ -203,4 +203,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				order by p.playlist_code asc) a
 				) where r_num between #{begin} and #{end} 	      
 	</select>
+	
+	<!-- favorite -->
+	<select id="getFavorite" resultType="spring.project.db.FavoriteVO">
+		 select * from(       
+			select rownum r_num, a.* from (       
+				select f.*,p.playlist_title,u.name 
+				from favorite f,playlist p, user_info u
+				where f.playlist_code = p.playlist_code
+				and f.user_info_code=u.user_info_code
+				and u.user_info_code=#{user_info_code}
+				order by f.playlist_code asc ) a
+			) where r_num between ${begin} and ${end}
+	</select>
+	
+	<select id="getFavoriteCount" resultType="int" parameterType="String">
+		select count(f.favorite_code) 
+				from favorite f,playlist p, user_info u
+				where f.playlist_code = p.playlist_code
+				and f.user_info_code=u.user_info_code
+				and u.user_info_code=#{user_info_code}
+	</select>
 </mapper>

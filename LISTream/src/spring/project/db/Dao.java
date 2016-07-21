@@ -165,5 +165,16 @@ public class Dao {
 		return list;
 	}
 	
+	//favorite
+	public List<FavoriteVO> getFavorite(Map<String,String> map){
+		List<FavoriteVO> list=template.selectList("getFavorite",map);
+		return list;
+	}
+	
+	public int getFavoriteCount(String user_info_code){
+		int result=template.selectOne("getFavoriteCount",user_info_code);
+		return result;
+	}
+	//favorite end
 	
 }

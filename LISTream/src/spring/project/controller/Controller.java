@@ -46,6 +46,7 @@ import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import spring.project.db.Dao;
+import spring.project.db.FavoriteVO;
 import spring.project.db.GenreVO;
 import spring.project.db.MusicVO;
 import spring.project.db.Page;
@@ -672,5 +673,62 @@ public class Controller {
 			mv.addObject("playlist",playlists);			
 			return mv;
 		}	
+		
+		//favorite
+		
+
+		@RequestMapping("/favorite/favorite.do")
+		public ModelAndView getFavorite(
+				@RequestParam(value="user_info_code",required=false,defaultValue="2") String user_info_code,
+				@RequestParam(value="cPage", required=false,defaultValue="1") String cPage){
+			
+			Map<String, String> map = new HashMap<>();
+			
+			
+			page.setNowPage(Integer.parseInt(cPage));		
+			page.setTotalRecord(dao.getFavoriteCount(user_info_code));
+		
+			
+			page.setNumPerPage(3);
+			page.setTotalPage();
+			page.setBegin((page.getNowPage()-1)*page.getNumPerPage() + 1);
+			page.setEnd(page.getBegin() + page.getNumPerPage() - 1);
+			if(page.getEnd() > page.getTotalRecord())
+				page.setEnd(page.getTotalRecord());
+			
+			page.setBeginPage((page.getNowPage()-1)/page.getPagePerBlock()*page.getPagePerBlock() + 1);
+			page.setEndPage(page.getBeginPage() + page.getPagePerBlock() - 1);
+			if(page.getEndPage() > page.getTotalPage())
+				page.setEndPage(page.getTotalPage());	
+			
+			map.put("user_info_code", user_info_code);
+			map.put("begin", String.valueOf(page.getBegin()));
+			map.put("end", String.valueOf(page.getEnd()));
+
+			List<FavoriteVO> list=dao.getFavorite(map);
+			
+			for (FavoriteVO k : list) {
+				System.out.println(k.getFavorite_code());
+				System.out.println(k.getName());
+				System.out.println(k.getPlaylist_code());
+				System.out.println(k.getR_num());
+				System.out.println(k.getUser_info_code());
+			}
+			
+			
+			
+			System.out.println(page.getBeginPage());
+			System.out.println(page.getEndPage());
+			System.out.println(page.getNowPage());
+			System.out.println(page.getTotalPage());
+			System.out.println(page.getPagePerBlock());
+		 	
+			
+			ModelAndView mv = new ModelAndView("favorite/favorite");
+			mv.addObject("favorite",list);
+			mv.addObject("page",page);
+			return mv;
+			
+		}
 		
 }
