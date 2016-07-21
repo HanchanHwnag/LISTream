@@ -28,8 +28,14 @@ li:HOVER {
 	width: 420px;
 }
 
-td {
-	padding: 10px;
+table {
+	width: 580px;
+	word-break: break-all;
+	height: auto;
+}
+
+th {
+	min-width: 50px;
 }
 
 #genre {
@@ -65,6 +71,28 @@ td {
 a {
 	text-decoration: none;
 }
+
+#fixedbar {
+	width:300px;
+	padding:10px;
+	background-color: #666666;
+	position: absolute;
+	visibility: hidden;
+	top: -20px;
+	left: 10px;
+	bottom: 0px;
+}
+
+#sidebar {
+	position: relative;
+	left:  650px;
+}
+
+p.song {
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 </style>
 <script type="text/javascript" src="../js/jquery-3.0.0.js"></script>
@@ -124,7 +152,7 @@ a {
 			$.ajax({
 				type: "post",
 				url: "search_music.do",
-				data: {"search" : $("#search").val(), "field" : $("#type").val()},
+				data: {"search" : $("#search").val(), "field" : $("#type").val(), "genre" : $(".active").val()},
 				dataType: "json",
 				success: function(data){
 					$("#search_div").empty();
@@ -145,7 +173,6 @@ a {
 						if(which >= $("#search_list").children().length)
 							which = 0;
 						$("#search_list").children().eq(which).attr("class","selected");
-						// $(".selected").trigger("click");
 					} else if(e.which == 38) {
 						which--;
 						if(which < 0)
@@ -174,15 +201,90 @@ a {
 				for(i=0; i<data.length; i++)
 					$("<option>").attr("class","playlist_item").attr("value", data[i]["playlist_code"]).text(data[i]["playlist_title"]).appendTo($("#playlist"));
 				
-				$("#playlist").on("change", function(){
+				$(document).ready(function(){
 					$.ajax({
-						
+						type: "post",
+						url : "playlist_music.do",
+						dataType : "json",
+						data : {"playlist_code" : "${playlist_code}"},
+						success : function(data){
+							playlist(data);
+						},
+						error : function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					    }
+					});
+				});
+				$("#playlist").on("click", function(){
+					$.ajax({
+						type: "post",
+						url : "playlist_music.do",
+						dataType : "json",
+						data : {"playlist_code" : $(this).val()},
+						success : function(data){
+							playlist(data);
+						},
+						error : function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					    }
 					});
 				});
 			}, 
 			error : function(request,status,error){
 				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 		    }
+		});
+		
+		function playlist(data){
+			$("#fixedbar").css("visibility", "visible");
+			$("#fixedbar").empty();
+			
+			$("<h3>").text("SongList").appendTo($("#fixedbar"));
+			$("<hr>").appendTo($("#fixedbar"));
+			
+			for(i=0; i<data.length; i++)
+				$("<p>").attr("class", "song").text(data[i]["music_title"]).appendTo($("#fixedbar"));
+		}
+		
+		var idx = 0;
+		// checkbox 모두 체크
+		 $("#checkall").click(function() {
+			 idx++;
+	         if (idx%2 == 1) {
+	            $(".chk").prop("checked", true);
+	         } else {
+	            $(".chk").prop("checked", false);
+	         }
+	      });
+		$("#put").on("click", function(){
+			var chk = false;
+			var arr_checked = new Array();
+			$("input.chk").each(function(){
+				if($(this).is(":checked")){
+					chk = true;
+					arr_checked.push($(this).val());
+				}
+			});
+
+			if(!chk){
+				alert("음악을 선택해주세요");
+				return;
+			}
+
+			$.ajax({
+				url : "music_insert.do",
+				type : "post",
+				data : {"arr_checked" : arr_checked, "playlist_code" : $("#playlist option:selected").val(),
+						"search_text" : $("#search").text(), "type" : $("#type").val(), "genre" : $(".active").val()},
+				dataType : "json",
+				success : function(data){
+					location.href="search_music_view.do?search_text=" + data[0]["search_text"]
+							+ "&type=" + data[0]["type"] + "&genre=" + data[0]["genre"] + "&playlist_code=" + data[0]["playlist_code"];
+				},
+				error : function(request,status,error){
+					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			    }
+			});
 		});
 	});
 </script>
@@ -208,6 +310,9 @@ a {
 		</c:choose>
 	</select>
 	<select id="playlist"></select>
+	<div id="sidebar">
+		<div id="fixedbar"></div>
+	</div>
 	<div id="search_div"></div>
 	<c:if test="${!empty list}">
 		<table style="text-align: center">
@@ -216,7 +321,8 @@ a {
 				<th>아티스트</th>
 				<th>제목</th>
 				<th>조회수</th>
-				<th><input type="button" value="put" onclick="put()"></th>
+				<th><input type="button" id="checkall" value="all"></th>
+				<th><input type="button" value="put" id="put"></th>
 			</tr>
 			<c:forEach var="k" items="${list}">
 				<tr>
@@ -224,7 +330,8 @@ a {
 					<td>${k.artist}</td>
 					<td>${k.music_title}</td>
 					<td>${k.music_hit}</td>
-					<td><input type="checkbox" class="music"></td>
+					<td><input type="checkbox" class="chk" value="${k.music_code}"></td>
+					<td></td>
 				</tr>
 			</c:forEach>
 			<tr>

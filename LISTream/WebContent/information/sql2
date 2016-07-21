@@ -125,3 +125,17 @@ DELETE CASCADE ;
 ALTER TABLE reply ADD CONSTRAINT reply_user_info_FK FOREIGN KEY (
 user_info_code ) REFERENCES user_info ( user_info_code ) ON
 DELETE CASCADE ;
+
+CREATE OR REPLACE TRIGGER add_trigger
+AFTER INSERT ON musiclist
+FOR EACH ROW
+BEGIN
+  update music set music_hit = music_hit + 1 where music_code = :new.music_code;
+END;
+
+CREATE OR REPLACE TRIGGER minus_trigger
+AFTER delete ON musiclist
+FOR EACH ROW
+BEGIN
+  update music set music_hit = music_hit - 1 where music_code = :old.music_code;
+END;

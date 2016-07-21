@@ -61,10 +61,14 @@ public class Dao {
 	public List<MusicVO> selectMusic(Map<String, String> search_map){
 		return template.selectList("selectMusic", search_map);
 	}
-	// ajax 검색(전체 검색, 7개 아래로 검색)
+	// ajax 검색(전체 검색, 7개 아래로 검색), Genre가 없는 경우(all)
 	public List<MusicVO> searchMusic(Map<String, String> search_map){
 		return template.selectList("searchMusic", search_map);
 	}
+	// ajax 검색(전체 검색, 7개 아래로 검색), Genre가 있는 경우
+		public List<MusicVO> searchMusicAddGenre(Map<String, String> search_map){
+			return template.selectList("searchMusicAddGenre", search_map);
+		}
 	// 검색어를 이용한 검색
 	public int selectMusicByTitleCount(Map<String, String> search_map){
 		return template.selectOne("selectMusicByTitleTotalCount", search_map);
@@ -87,7 +91,15 @@ public class Dao {
 		return template.selectList("selectMusicByGenreAndTitle", search_map);
 	}
 	// 플레이리스트_리스트 출력
-	public List<PlayListVO> selectPlayList(String id){
-		return template.selectList("selectPlayListList", id);
+	public List<PlayListVO> selectPlayList(String user_info_code){
+		return template.selectList("selectPlayListList", user_info_code);
+	}
+	// 플레이리스트_음악 출력
+	public List<MusicVO> selectPlayListMusic(Map<String, String> map){
+		return template.selectList("selectPlayListMusic", map);
+	}
+	// 플레이리스트_음악 삽입
+	public void insertMusicInPlayList(Map<String, String> map){
+		template.insert("insertMusicInPlayList", map);
 	}
 }

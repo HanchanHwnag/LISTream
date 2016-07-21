@@ -13,11 +13,13 @@
 	function go_manage_user(){
 		window.open("user_list_view.do", "", "width=430, height=500, toolbar=no, scrollbar=yes"); 
 	}
+	function go_search_music(){
+		location.href="search_music_view.do";
+	}
 </script>
 </head>
 <body>
-	${login_vo.name }
-	${login_vo.name }
+	<input type="button" value="음악검색" onclick="go_search_music()">
 	
 	<c:if test="${login_vo.id == 'admin1' || login_vo.id == 'admin2' || login_vo.id == 'admin3' || login_vo.id == 'admin4' || login_vo.id == 'admin5'}">
 		<input type="button" onclick="go_music_register()" value="음악 등록">
