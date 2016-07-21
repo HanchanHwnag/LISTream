@@ -730,7 +730,7 @@ public class Controller {
 
 		/* ---------------------------PLAYLIST SEARCH------------------------------ */
 		// THEME
-		@RequestMapping(value={"playlist/theme.do", "login/theme.do"})
+		@RequestMapping(value={"playlist/theme.do", "login/theme.do","playerTest/theme.do"})
 		public ModelAndView theme_ok(){
 			ModelAndView mv = new ModelAndView("playlist/theme_list");
 			
@@ -754,7 +754,7 @@ public class Controller {
 			return mv;
 		}
 		
-		@RequestMapping(value={"playlist/searchPlayListView.do", "login/searchPlayListView.do"})
+		@RequestMapping(value={"playlist/searchPlayListView.do", "login/searchPlayListView.do","playerTest/searchPlayListView.do"})
 		public ModelAndView searchPlayList(@RequestParam(value="theme",required=false,defaultValue="0") String theme,
 											@RequestParam(value="cPage",required=false,defaultValue="1") String cPage){
 			ModelAndView mv = new ModelAndView("playlist/search_playlist");
@@ -791,7 +791,7 @@ public class Controller {
 			return mv;
 		}
 		// 즐겨찾기에 추가
-		@RequestMapping(value={"playlist/favorite_insert.do","login/favorite_insert.do"})
+		@RequestMapping(value={"playlist/favorite_insert.do","login/favorite_insert.do","playerTest/favorite_insert.do"})
 		@ResponseBody
 		public String favorite_insert(HttpServletRequest request){
 			String[] playlist_codes = request.getParameterValues("arr_checked[]");
@@ -800,8 +800,7 @@ public class Controller {
 			Map<String, String> map = new HashMap<>();
 			for(int i=0; i<playlist_codes.length; i++){
 				map.put("playlist_code", playlist_codes[i]);
-				// 임의(수정)
-				map.put("user_info_code", "2");
+				map.put("user_info_code", session_code);
 				
 				dao.insertPlayListInFavorite(map);
 			}
@@ -810,7 +809,7 @@ public class Controller {
 		}
 		
 		// 플레이리스트 상세내용
-		@RequestMapping(value={"playlist/playlist_detail.do", "login/playlist_detail.do"})
+		@RequestMapping(value={"playlist/playlist_detail.do", "login/playlist_detail.do","playerTest/playlist_detail.do"})
 		public ModelAndView playlist_detail(@RequestParam(value="playlist_code", required=true) String playlist_code) {
 			ModelAndView mv = new ModelAndView("playlist/playlist_detail");
 			

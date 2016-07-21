@@ -500,13 +500,11 @@ iframe {
 	<div>
 	<ul class="sidemenu">
 		<li style=" border-top-left-radius: 10px;
-	border-top-right-radius: 10px; color: white;"><p><a href="../music/search_music.jsp" target="frame">검색</a></p></li>
-		<li><a>장르별</a></li>
+	border-top-right-radius: 10px; color: white;"><p><a href="../music/search_music.jsp" target="frame">노래 검</a></p></li>
+		<li id="playlistBrowse" style = "border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;"><a href="searchPlayListView.do" target="frame">둘러보기</a></li>
 		<li id="myMusic"><a href="../mymusic/mymusic.jsp" target="frame">내 노래</a></li>
-		<li id="favorite"><a href="favorite.do" target="frame">즐겨찾기</a></li>
-		<li id="myMusic"><a href="../mymusic/mymusic.jsp" target="frame">플레이리스트보기</a></li>
-		<li style = "border-bottom-left-radius: 10px;
-	border-bottom-right-radius: 10px;"><button>2</button></li>
+		<li id="favorite"><a href="favorite.do" target="frame">팔로우 리스트</a></li>
 	</ul>
 	</div>
 	<div id="playerDiv1">
