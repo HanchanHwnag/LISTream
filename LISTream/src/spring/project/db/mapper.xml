@@ -60,11 +60,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		ON (L.music_code=M.music_code)
 		WHERE playlist_code=#{playlist_code}
 	</select>
-	<!-- 음악 검색 < 7(ajax) -->
+	<!-- 음악 검색 < 7(ajax), genre가 없는 경우(all) -->
 	<select id="searchMusic" resultType="spring.project.db.MusicVO" parameterType="java.util.Map">
 		select distinct ${field} from (
 			select rownum r_num, a.* from (
 				(select * from music where lower(${field}) LIKE '%' || lower(#{search_text}) || '%' order by music_hit desc) a)
+			) where r_num <![CDATA[<]]> 7
+	</select>
+	<!-- 음악 검색 < 7(ajax), genre가 있는 경우 -->
+	<select id="searchMusicAddGenre" resultType="spring.project.db.MusicVO" parameterType="java.util.Map">
+		select distinct ${field} from (
+			select rownum r_num, a.* from (
+				(select * from music where lower(${field}) LIKE '%' || lower(#{search_text}) || '%' and genre_code = #{genre} order by music_hit desc) a)
 			) where r_num <![CDATA[<]]> 7
 	</select>
 	<!-- 전체 검색 -->
@@ -108,6 +115,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				(select * from music where genre_code = #{genre} and lower(${field}) = lower(#{search_text}) order by music_hit desc) a)
 			) where r_num between #{begin} and #{end} 
 	</select>
+	<!-- PlayList -->
+	<select id="selectPlayListList" resultType="spring.project.db.PlayListVO" parameterType="java.lang.String">
+		select distinct playlist_code, playlist_title, playlist.user_info_code, playlist.hit 
+			from playlist, user_info where playlist.user_info_code = user_info.user_info_code 
+				and user_info.user_info_code = #{user_info_code}
+	</select>
+	<!-- PlayList Music -->
+	<select id="selectPlayListMusic" resultType="spring.project.db.MusicVO" parameterType="java.lang.String">
+		select music.music_title 
+			from playlist, user_info, musiclist, music 
+			where music.music_code = musiclist.music_code 
+			  and musiclist.playlist_code = playlist.playlist_code
+			  and user_info.user_info_code = #{user_info_code}
+			  and playlist.playlist_code = #{playlist_code}
+	</select>
+	<!-- Playlist에 음악 삽입 -->
+	<select id="insertMusicInPlayList" parameterType="java.util.Map">
+		insert into musiclist values(musiclist_seq.nextval,#{music_code},#{playlist_code})
+	</select>
+	
 	<select id="getPlayList" parameterType="Map" resultType="spring.project.db.PlayListVO">
 			
 			select p.playlist_code,p.playlist_title,u.id

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.jws.WebParam.Mode;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +58,8 @@ import spring.project.db.UserVO;
 @org.springframework.stereotype.Controller
 @SessionAttributes("login_vo")
 public class Controller {
+	private String session_id;
+	private String session_code;
 	private Dao dao;
 	private Page page;
 	
@@ -81,6 +84,8 @@ public class Controller {
 		if (flag) {
 			mv = new ModelAndView("login/login");
 			mv.addObject("login_vo", result);
+			session_id = result.getId();
+			session_code = result.getUser_info_code();
 		} else {
 			mv = new ModelAndView("login/login_form");
 			mv.addObject("result", "fail");
@@ -122,7 +127,7 @@ public class Controller {
 			if (i != genre.size() - 1)
 				result += "/";
 		}
-
+		
 		mv.addObject("result", result);
 		return mv;
 	}
@@ -192,7 +197,6 @@ public class Controller {
 
 		return new ModelAndView("admin/admin_register_music");
 	}
-
 	// 회원 관리 페이지
 	@RequestMapping("login/user_list_view.do")
 	public ModelAndView user_list(HttpServletRequest request) throws Exception {
@@ -255,12 +259,13 @@ public class Controller {
 
 	/*---------------------------------------------------------------------------------------------*/
 	// 음악 검색
-		@RequestMapping(value="music/search_music.do", produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
+		@RequestMapping(value={"music/search_music.do","login/search_music.do"}, produces="text/plain;charset=UTF-8", method=RequestMethod.POST)
 		public ModelAndView search_music(HttpServletRequest request){
 			ModelAndView mv = new ModelAndView("music/music_list");
 			
 			String search_text = request.getParameter("search");
 			String field = request.getParameter("field");
+			String genre = request.getParameter("genre");
 			List<MusicVO> list = null;
 			
 			String result = "[";
@@ -268,8 +273,12 @@ public class Controller {
 				Map<String, String> search_map = new HashMap<>();
 				search_map.put("search_text", search_text);
 				search_map.put("field", field);
-				
-				list = dao.searchMusic(search_map);
+				if(!genre.equals("0")){
+					search_map.put("genre", genre);
+					list = dao.searchMusicAddGenre(search_map);
+				} else {
+					list = dao.searchMusic(search_map);
+				}
 				
 				int idx = 0;
 				for(MusicVO mvo : list){
@@ -289,8 +298,31 @@ public class Controller {
 			mv.addObject("result", result);
 			return mv;
 		}
+		//해당 플레이리스트의 음악리스트 가져오기
+				@RequestMapping(value = "playerTest/select_musics_to_play.do",produces = "text/html;charset=UTF-8", method = RequestMethod.GET)
+				@ResponseBody
+				public String selectMusicsToPlay(HttpServletRequest request, HttpServletResponse response){
+					System.out.println("Controller in");
+					String playlist_code = request.getParameter("playlist_code");
+					System.out.println("playerlist_code : "+playlist_code);
+					List<MusicVO> list =dao.selectMusicsToPlay(playlist_code);
+					String result="<div id='listContainer' class='playlistContainer'><ul id='playListContainer'>";
+					if(list.size()==0||list==null){
+						result+="<li data-src='"+"'>재생할 음악이 없습니다</li>";
+					}else{
+						for (MusicVO k : list) {
+							result+="<li data-src='"
+									+k.getPath()
+									+"'><a href='#'>"
+									+k.getMusic_title()
+									+"</a></li>";
+						}
+					}
+					result+="</ul></div><div class='containerPlayer'><div id='playerContainer'><ul class='controls'><div class='audioDetails'><span class='songPlay'></span> <span data-attr='timer' class='audioTime'></span></div><li><a href='#' class='shuffle shuffleActive' data-attr='shuffled'></a></li><li><a href='#' class='left' data-attr='prevAudio'></a></li><li><a href='#' id='playPause' class='play' data-attr='playPauseAudio'></a></li><li><a href='#' class='right' data-attr='nextAudio'></a></li><li><a href='#' class='repeat' data-attr='repeatSong'></a></li><li><a class='nowplay' onclick='show()'></a></li><div class='volumeControl'><div class='volume volume1'></div><input class='bar' data-attr='rangeVolume' type='range' min='0' max='1' step='0.1' value='0.7' /></div></ul><div class='progress'><div data-attr='seekableTrack' class='seekableTrack'></div><div class='updateProgress'></div></div></div></div>";
+					return result;
+				}
 		
-		@RequestMapping(value={"music/search_music_view.do"})
+		@RequestMapping(value={"music/search_music_view.do", "login/search_music_view.do"})
 		public ModelAndView select_music(HttpServletRequest request){
 			try {
 				request.setCharacterEncoding("utf-8");
@@ -303,6 +335,7 @@ public class Controller {
 			String genre = request.getParameter("genre"); // 필수
 			String type = request.getParameter("type"); // 필수
 			String cPage = request.getParameter("cPage");
+			String playlist_code = request.getParameter("playlist_code");
 			if(cPage != null)
 				page.setNowPage(Integer.parseInt(cPage));
 			else
@@ -372,33 +405,95 @@ public class Controller {
 			mv.addObject("search_text", search_text);
 			mv.addObject("genre", genre);
 			mv.addObject("type", type);
+			mv.addObject("playlist_code", playlist_code);
+			return mv;
+		}
+		
+		// 플레이 리스트
+		@RequestMapping(value={"music/playlist.do","login/playlist.do"})
+		public ModelAndView select_playlist(){
+			ModelAndView mv = new ModelAndView("music/playlist_list");
+			
+			// 임의(수정)
+			List<PlayListVO> list = dao.selectPlayList(session_code);
+			String result = "[";
+			
+			int idx = 0;
+			for(PlayListVO pvo : list){
+				idx++;
+				result += "{";
+				result += "\"playlist_code\" : \"" + pvo.getPlaylist_code() + "\",";
+				result += "\"playlist_title\" : \"" + pvo.getPlaylist_title() + "\",";
+				result += "\"user_info_code\" : \"" + pvo.getUser_info_code() + "\",";
+				result += "\"hit\" : \"" + pvo.getHit() + "\"";
+				result += "}";
+				if(idx != list.size())
+					result += ",";
+			}
+			result += "]";
+			
+			mv.addObject("result", result);
+			return mv;
+		}
+		
+		// 플레이리스트 음악 출력
+		@RequestMapping(value={"music/playlist_music.do","login/playlist_music.do"})
+		public ModelAndView select_musiclist(String playlist_code){
+			ModelAndView mv = new ModelAndView("music/playlist_music_list");
+			
+			Map<String, String> map = new HashMap<>();
+			map.put("playlist_code", playlist_code);
+			map.put("user_info_code", session_code);
+			
+			List<MusicVO> list = dao.selectPlayListMusic(map);
+			String result = "[";
+					
+			int idx = 0;
+			for(MusicVO mvo : list){
+				idx++;
+				result += "{";
+				result += "\"music_title\" : \"" + mvo.getMusic_title() + "\"";
+				result += "}";
+				if(idx != list.size())
+					result += ",";
+				}
+				result += "]";
+					
+			mv.addObject("result", result);
 			return mv;
 		}
 		
 		
-		//해당 플레이리스트의 음악리스트 가져오기
-		@RequestMapping(value = "playerTest/select_musics_to_play.do",produces = "text/html;charset=UTF-8", method = RequestMethod.GET)
+		// MusicList에 삽입 
+		@RequestMapping(value={"music/music_insert.do","login/music_insert.do"})
 		@ResponseBody
-		public String selectMusicsToPlay(HttpServletRequest request, HttpServletResponse response){
-			System.out.println("Controller in");
+		public String music_insert(HttpServletRequest request){
+			String[] music_codes = request.getParameterValues("arr_checked[]");
 			String playlist_code = request.getParameter("playlist_code");
-			System.out.println("playerlist_code : "+playlist_code);
-			List<MusicVO> list =dao.selectMusicsToPlay(playlist_code);
-			String result="<div id='listContainer' class='playlistContainer'><ul id='playListContainer'>";
-			if(list.size()==0||list==null){
-				result+="<li data-src='"+"'>재생할 음악이 없습니다</li>";
-			}else{
-				for (MusicVO k : list) {
-					result+="<li data-src='"
-							+k.getPath()
-							+"'><a href='#'>"
-							+k.getMusic_title()
-							+"</a></li>";
-				}
+			String search_text = request.getParameter("search_text");
+			String type = request.getParameter("type");
+			String genre = request.getParameter("genre");
+			String result = "";
+
+			Map<String, String> map = new HashMap<>();
+			for(int i=0; i<music_codes.length; i++){
+				map.put("music_code", music_codes[i]);
+				map.put("playlist_code", playlist_code);
+				
+				dao.insertMusicInPlayList(map);
 			}
-			result+="</ul></div><div class='containerPlayer'><div id='playerContainer'><ul class='controls'><div class='audioDetails'><span class='songPlay'></span> <span data-attr='timer' class='audioTime'></span></div><li><a href='#' class='shuffle shuffleActive' data-attr='shuffled'></a></li><li><a href='#' class='left' data-attr='prevAudio'></a></li><li><a href='#' id='playPause' class='play' data-attr='playPauseAudio'></a></li><li><a href='#' class='right' data-attr='nextAudio'></a></li><li><a href='#' class='repeat' data-attr='repeatSong'></a></li><li><a class='nowplay' onclick='show()'></a></li><div class='volumeControl'><div class='volume volume1'></div><input class='bar' data-attr='rangeVolume' type='range' min='0' max='1' step='0.1' value='0.7' /></div></ul><div class='progress'><div data-attr='seekableTrack' class='seekableTrack'></div><div class='updateProgress'></div></div></div></div>";
+			
+			result += "[";
+			result += "{\"search_text\":\"" + search_text + "\",";
+			result += "\"type\":\"" + type + "\",";
+			result += "\"genre\":\"" + genre + "\",";
+			result += "\"playlist_code\":\"" + playlist_code + "\"}";
+			result += "]";
+			
 			return result;
 		}
+		
+		
 		@RequestMapping("/mymusic/mymusic.do")
 		public ModelAndView myMusic(
 				@RequestParam(value="user_info_code" ,required = true, defaultValue="2") String user_info_code){		
@@ -421,8 +516,7 @@ public class Controller {
 			mv.addObject("playlist",playlists);			
 			return mv;
 		}	
-
-
+		
 		
 
 		@RequestMapping("/mymusic/musiclist.do")	
@@ -515,8 +609,12 @@ public class Controller {
 			
 		/*	ModelAndView mav = new ModelAndView("redirect:musiclist.do?playlist_code="+playlist_code);*/
 			return result1;
-		}
-		
+			}
+				
+	
+	
+	
+	
 		@RequestMapping("/mymusic/getPlaylist.do")
 		public ModelAndView getPlaylist(
 				@RequestParam(value="user_info_code" ,required = true, defaultValue="2") String user_info_code,
@@ -576,20 +674,3 @@ public class Controller {
 		}	
 		
 }
-
-
-
-//List<GenreVO> genre = dao.selectGenre();
-//String result = "";
-//
-//response.setContentType("text/html; charset=utf-8");
-//
-//for (int i = 0; i < genre.size(); i++) {
-//	result += genre.get(i).getGenre_code() + ",";
-//	result += genre.get(i).getGenre_name();
-//
-//	if (i != genre.size() - 1)
-//		result += "/";
-//}
-//
-//return result;
