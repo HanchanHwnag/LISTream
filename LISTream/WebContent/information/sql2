@@ -139,3 +139,17 @@ FOR EACH ROW
 BEGIN
   update music set music_hit = music_hit - 1 where music_code = :old.music_code;
 END;
+
+CREATE OR REPLACE TRIGGER playlist_add_trigger
+AFTER INSERT ON favorite
+FOR EACH ROW
+BEGIN
+  update playlist set hit = hit + 1 where playlist_code = :new.playlist_code;
+END;
+
+CREATE OR REPLACE TRIGGER playlist_minus_trigger
+AFTER delete ON favorite
+FOR EACH ROW
+BEGIN
+  update playlist set hit = hit - 1 where playlist_code = :old.playlist_code;
+END;

@@ -17,6 +17,8 @@ public class Dao {
 		this.template = template;
 	}
 	
+	/*---------------------------User------------------------------*/
+	
 	// 유저 데이터 모두 가져오기
 	public List<UserVO> selectAll(){
 		return template.selectList("selectAll");
@@ -53,7 +55,9 @@ public class Dao {
 	public List<UserVO> searchUser(String id){
 		return template.selectList("searchUser", id);
 	}
-	/*---------------------------------------------------------*/
+	
+	
+	/*----------------------------Music-----------------------------*/
 	// 전체 검색
 	public int selectMusicCount(){
 		return template.selectOne("selectMusicTotalCount");
@@ -101,5 +105,27 @@ public class Dao {
 	// 플레이리스트_음악 삽입
 	public void insertMusicInPlayList(Map<String, String> map){
 		template.insert("insertMusicInPlayList", map);
+	}
+	
+	/*----------------------------PlayList-----------------------------*/
+	// 테마를 검색
+	public List<ThemeVO> selectTheme(){
+		return template.selectList("selectTheme");
+	}
+	// 플레이리스트 수 검색
+	public int selectPlayListByThemeTotalCount(Map<String, String> map){
+		return template.selectOne("selectPlayListByThemeTotalCount", map);
+	}
+	// 플레이리스트 검색
+	public List<PlayListVO> selectPlayListByTheme(Map<String, String> map){
+		return template.selectList("selectPlayListByTheme", map);
+	}
+	// 즐겨찾기에 플레이리스트 삽입
+	public void insertPlayListInFavorite(Map<String, String> map){
+		template.insert("insertPlayListInFavorite", map);
+	}
+	// 플레이리스트 상세 내용
+	public List<MusicVO> selectPlayListDetail(Map<String, String> map){
+		return template.selectList("selectPlayListDetail", map);
 	}
 }
