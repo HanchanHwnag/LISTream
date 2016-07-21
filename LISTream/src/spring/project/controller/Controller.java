@@ -727,5 +727,115 @@ public class Controller {
 			return mv;
 			
 		}
+
+		/* ---------------------------PLAYLIST SEARCH------------------------------ */
+		// THEME
+		@RequestMapping(value={"playlist/theme.do", "login/theme.do"})
+		public ModelAndView theme_ok(){
+			ModelAndView mv = new ModelAndView("playlist/theme_list");
+			
+			List<ThemeVO> theme = dao.selectTheme();
+			
+			String result = "[";
+			
+			int idx = 0;
+			for(ThemeVO tvo : theme){
+				idx ++;
+				result += "{\"theme_code\" : \"" + tvo.getTheme_code() + "\",";
+				result += "\"theme_name\" : \"" + tvo.getTheme_name() + "\"}";
+				
+				if(idx != theme.size())
+					result += ",";
+			}
+			
+			result += "]";
+			
+			mv.addObject("result", result);
+			return mv;
+		}
 		
+		@RequestMapping(value={"playlist/searchPlayListView.do", "login/searchPlayListView.do"})
+		public ModelAndView searchPlayList(@RequestParam(value="theme",required=false,defaultValue="0") String theme,
+											@RequestParam(value="cPage",required=false,defaultValue="1") String cPage){
+			ModelAndView mv = new ModelAndView("playlist/search_playlist");
+			
+			page.setNowPage(Integer.parseInt(cPage));
+			System.out.println(cPage);
+
+			Map<String, String> map = new HashMap<>();
+			map.put("theme_code", theme);
+			
+			int totalRecord = dao.selectPlayListByThemeTotalCount(map);
+			
+			page.setTotalRecord(totalRecord);
+			page.setTotalPage();
+			
+			page.setBegin((page.getNowPage()-1)*page.getNumPerPage() + 1);
+			page.setEnd(page.getBegin() + page.getNumPerPage() - 1);
+			if(page.getEnd() > page.getTotalRecord())
+				page.setEnd(page.getTotalRecord());
+			
+			page.setBeginPage((page.getNowPage()-1)/page.getPagePerBlock()*page.getPagePerBlock() + 1);
+			page.setEndPage(page.getBeginPage() + page.getPagePerBlock() - 1);
+			if(page.getEndPage() > page.getTotalPage())
+				page.setEndPage(page.getTotalPage());
+			
+			map.put("begin", String.valueOf(page.getBegin()));
+			map.put("end", String.valueOf(page.getEnd()));
+			
+			List<PlayListVO> list = dao.selectPlayListByTheme(map);
+			mv.addObject("theme", theme);
+			mv.addObject("page", page);
+			mv.addObject("list", list);
+			
+			return mv;
+		}
+		// 즐겨찾기에 추가
+		@RequestMapping(value={"playlist/favorite_insert.do","login/favorite_insert.do"})
+		@ResponseBody
+		public String favorite_insert(HttpServletRequest request){
+			String[] playlist_codes = request.getParameterValues("arr_checked[]");
+			String result = "success";
+
+			Map<String, String> map = new HashMap<>();
+			for(int i=0; i<playlist_codes.length; i++){
+				map.put("playlist_code", playlist_codes[i]);
+				// 임의(수정)
+				map.put("user_info_code", "2");
+				
+				dao.insertPlayListInFavorite(map);
+			}
+
+			return result;
+		}
+		
+		// 플레이리스트 상세내용
+		@RequestMapping(value={"playlist/playlist_detail.do", "login/playlist_detail.do"})
+		public ModelAndView playlist_detail(@RequestParam(value="playlist_code", required=true) String playlist_code) {
+			ModelAndView mv = new ModelAndView("playlist/playlist_detail");
+			
+			Map<String, String> map = new HashMap<>();
+			map.put("playlist_code", playlist_code);
+			
+			List<MusicVO> list = dao.selectPlayListDetail(map);
+			String result = "[";
+			
+			int idx = 0;
+			for(MusicVO mvo : list){
+				idx++;
+				
+				result += "{\"r_num\" : \"" + mvo.getR_num() + "\",";
+				result += "\"artist\" : \"" + mvo.getArtist() + "\",";
+				result += "\"music_title\" : \"" + mvo.getMusic_title() + "\",";
+				result += "\"music_hit\" : \"" + mvo.getMusic_hit() + "\"}";
+				
+				if(idx != list.size())
+					result += ",";
+			}
+			
+			result += "]";
+			mv.addObject("result", result);
+			
+			return mv;
+		}
 }

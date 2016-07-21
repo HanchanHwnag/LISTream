@@ -177,4 +177,25 @@ public class Dao {
 	}
 	//favorite end
 	
+	/*----------------------------PlayList-----------------------------*/
+	// 테마를 검색
+	public List<ThemeVO> selectTheme(){
+		return template.selectList("selectTheme");
+	}
+	// 플레이리스트 수 검색
+	public int selectPlayListByThemeTotalCount(Map<String, String> map){
+		return template.selectOne("selectPlayListByThemeTotalCount", map);
+	}
+	// 플레이리스트 검색
+	public List<PlayListVO> selectPlayListByTheme(Map<String, String> map){
+		return template.selectList("selectPlayListByTheme", map);
+	}
+	// 즐겨찾기에 플레이리스트 삽입
+	public void insertPlayListInFavorite(Map<String, String> map){
+		template.insert("insertPlayListInFavorite", map);
+	}
+	// 플레이리스트 상세 내용
+	public List<MusicVO> selectPlayListDetail(Map<String, String> map){
+		return template.selectList("selectPlayListDetail", map);
+	}
 }
