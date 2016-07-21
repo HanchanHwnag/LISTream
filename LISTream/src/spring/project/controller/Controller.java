@@ -520,7 +520,7 @@ public class Controller {
 		
 		
 
-		@RequestMapping("/mymusic/musiclist.do")	
+		@RequestMapping(value={"/mymusic/musiclist.do","/favorite/getMusiclist.do"})	
 		public ModelAndView getMusicList(
 				@RequestParam(value="user_info_code" ,required = true) String user_info_code,
 				@RequestParam(value="playlist_code") String playlist_code){
@@ -529,6 +529,9 @@ public class Controller {
 			Map<String,String> map = new HashMap<>();
 			map.put("user_info_code", user_info_code);
 			map.put("playlist_code", playlist_code);
+			
+		
+			
 			List<MusicVO> list=dao.getMusicList(map);		
 			String musiclist="<musiclist>";		
 			for (MusicVO k : list) {
@@ -683,7 +686,7 @@ public class Controller {
 				@RequestParam(value="cPage", required=false,defaultValue="1") String cPage){
 			
 			Map<String, String> map = new HashMap<>();
-			
+		
 			
 			page.setNowPage(Integer.parseInt(cPage));		
 			page.setTotalRecord(dao.getFavoriteCount(user_info_code));
@@ -706,23 +709,15 @@ public class Controller {
 			map.put("end", String.valueOf(page.getEnd()));
 
 			List<FavoriteVO> list=dao.getFavorite(map);
-			
+			/*
 			for (FavoriteVO k : list) {
 				System.out.println(k.getFavorite_code());
 				System.out.println(k.getName());
 				System.out.println(k.getPlaylist_code());
 				System.out.println(k.getR_num());
 				System.out.println(k.getUser_info_code());
-			}
-			
-			
-			
-			System.out.println(page.getBeginPage());
-			System.out.println(page.getEndPage());
-			System.out.println(page.getNowPage());
-			System.out.println(page.getTotalPage());
-			System.out.println(page.getPagePerBlock());
-		 	
+			}	
+		 	*/
 			
 			ModelAndView mv = new ModelAndView("favorite/favorite");
 			mv.addObject("favorite",list);
