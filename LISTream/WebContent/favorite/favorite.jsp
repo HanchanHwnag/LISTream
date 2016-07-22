@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="w3.css">
 <title>Insert title here</title>
 <style type="text/css">
 #favoritelist{
@@ -32,17 +33,18 @@ a{
 
 .title:HOVER{
  	background: #c8c8c8;
+ 	cursor: pointer;
 }
 
 #user_name:HOVER{
 background: #c8c8c8;
+cousor:pointer;
 }
 </style>
 
 <script type="text/javascript" src="../js/jquery-3.0.0.js"></script>
 <script type="text/javascript">
 
-	var user_info_code=2;
 $(function(){
 		
 		
@@ -66,8 +68,9 @@ $(function(){
 			
 			favorite_code=$(this).attr("id");
 			cPage=$(".nowpaging").text();
+			playlist_code=$(this).attr("title");
 			
-			location.href="deleteFavorite.do?favorite_code="+favorite_code+"&cPage="+cPage;
+			location.href="deleteFavorite.do?favorite_code="+favorite_code+"&cPage="+cPage+"&playlist_code="+playlist_code;
 			
 			
 			
@@ -82,7 +85,7 @@ function getMusiclist(playlist_code){
 		$.ajax({	
 			type:"post",
 			url:"getMusiclist.do",
-			data:{'playlist_code':playlist_code,'user_info_code':user_info_code},
+			data:{'playlist_code':playlist_code},
 			dataTypa:"xml",
 			success:function(data){				
 				
@@ -112,12 +115,12 @@ function getMusiclist(playlist_code){
 <body oncontextmenu="return false;">
 	
 	<div id="favoritediv" style="float: left;">
-	<table id="favoritetable" >
+	<table id="favoritetable" class="w3-table w3-bordered w3-striped w3-small" >
 		<thead align="center">
 			<tr>
-				<td width="50px">번호</td>
-				<td width="50px">아이디</td>
-				<td width="300px">플레이리스트명</td>
+				<td width="50px">No.</td>
+				<td width="50px">ID</td>
+				<td width="300px">Playlist Name</td>
 				<td>재생</td>
 			</tr>
 		</thead>
@@ -130,8 +133,8 @@ function getMusiclist(playlist_code){
 					
 					<td>${f.r_num }</td>
 					<td id="user_name">${f.name}</td>
-					<td class="title" id="${f.favorite_code}" onclick="getMusiclist(${f.playlist_code})">${f.playlist_title}</td>
-					<td><input type="button" class="playBtn" value="재생" id="${f.playlist_code}"></td>
+					<td class="title" id="${f.favorite_code}" title="${f.playlist_code}" onclick="getMusiclist(${f.playlist_code})">${f.playlist_title}</td>
+					<td><input type="button" class="playBtn" value="▶" id="${f.playlist_code}"></td>
 				</tr>
 			</c:forEach>
 			</c:when>
@@ -181,13 +184,13 @@ function getMusiclist(playlist_code){
 	</table>
 	</div>
 	
-	<div id="musiclistdiv" style="float: left;">
-			<table id="musiclisttable">
+	<div id="musiclistdiv"  style="float: right; position: fixed; width:500px; right: 5px;top:300px" >
+			<table id="musiclisttable" class="w3-table w3-tiny w3-border" style="table-layout:fixed">
 			<thead align="center">
 					<tr>
-						<th width="40px">번호</th>
-						<th width="250px">제목</th>
-						<th width="80px">가수</th>
+						<th width="40px">No.</th>
+						<th width="250px">Music Title</th>
+						<th width="80px">Singer</th>
 					</tr>
 			</thead>
 			</table>	

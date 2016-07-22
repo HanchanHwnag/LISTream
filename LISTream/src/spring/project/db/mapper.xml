@@ -235,6 +235,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 and f.user_info_code=#{user_info_code}
 		 )
 	</select>
+	<update id="minusHit" parameterType="Map">
+		update playlist set hit = hit-1 where playlist_code=#{playlist_code}
+	</update>
 	
 	<!-- PlayList 관련 -->
 	<!-- Theme 가져오기 -->

@@ -418,6 +418,7 @@ public class Controller {
 			
 			// 임의(수정)
 			List<PlayListVO> list = dao.selectPlayList(session_code);
+			System.out.println("session_code : " + session_code);
 			String result = "[";
 			
 			int idx = 0;
@@ -693,7 +694,6 @@ public class Controller {
 			
 			page.setNowPage(Integer.parseInt(cPage));		
 			page.setTotalRecord(dao.getFavoriteCount(session_code));
-		
 			
 			page.setTotalPage();
 			page.setBegin((page.getNowPage()-1)*page.getNumPerPage() + 1);
@@ -838,11 +838,12 @@ public class Controller {
 			return mv;
 		}
 		@RequestMapping("/playerTest/deleteFavorite.do")
-		public ModelAndView deleteFavorite(String favorite_code,String cPage){
+		public ModelAndView deleteFavorite(String favorite_code,String cPage,String playlist_code){
 			
 			Map<String,String> map =new HashMap<>();
 			map.put("favorite_code", favorite_code);
 			map.put("user_info_code", session_code);
+			map.put("playlist_code", playlist_code);
 			
 			
 			dao.deleteFavorite(map);
@@ -899,7 +900,7 @@ public class Controller {
 			return mv;
 		}
 		
-		@RequestMapping(value={"login/reply_delete.do", "playlist/reply_delete.do"})
+		@RequestMapping(value={"login/reply_delete.do", "playlist/reply_delete.do","playerTest/reply_delete.do"})
 		public ModelAndView deleteReply(HttpServletRequest request) throws Exception {
 			request.setCharacterEncoding("utf-8");
 			ModelAndView mv = new ModelAndView("playlist/reply_list");
@@ -933,4 +934,6 @@ public class Controller {
 			result += "]";
 			return result;
 		}
+		
+	
 }

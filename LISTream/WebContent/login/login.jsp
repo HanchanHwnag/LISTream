@@ -27,9 +27,6 @@
 	<c:choose>
 		<c:when
 			test="${vo.id == 'admin1' || vo.id == 'admin2' || vo.id == 'admin3' || vo.id == 'admin4' || vo.id == 'admin5'}">
-			<script type="text/javascript">
-				alert('${login_vo.id}');
-			</script>
 			<input type="button" onclick="go_music_register()" value="음악 등록">
 			<input type="button" onclick="go_manage_user()" value="회원 관리">
 		</c:when>

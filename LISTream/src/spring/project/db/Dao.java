@@ -177,6 +177,8 @@ public class Dao {
 	}
 	public void deleteFavorite(Map<String,String> map){
 		template.delete("deleteFavorite",map);
+		template.update("minusHit", map);
+		
 	}
 	//favorite end
 	

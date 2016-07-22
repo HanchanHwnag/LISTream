@@ -514,7 +514,7 @@ iframe {
   <a style="padding-left: 10px;padding-right: 10px" href="../music/search_music.jsp" target="frame" >Music Search</a>
   <a style="padding-left: 10px;padding-right: 10px" href="../mymusic/mymusic.jsp" target="frame" >My Music</a>
   <a style="padding-left: 10px;padding-right: 10px" href="searchPlayListView.do" target="frame">Playlist View</a>
-  <a style="padding-left: 10px;padding-right: 10px" href="favorite.do" target="frame">fallow list</a>
+  <a style="padding-left: 10px;padding-right: 10px" href="favorite.do" target="frame">follow list</a>
 </nav>
 
 <header class="w3-container w3-gray">

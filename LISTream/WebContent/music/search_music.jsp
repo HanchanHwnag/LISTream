@@ -99,6 +99,9 @@ p.song {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+#rightMenu a{
+	border-bottom: 1px lightgray;
+}
 </style>
 <script type="text/javascript" src="../js/jquery-3.0.0.js"></script>
 <script type="text/javascript">
@@ -330,7 +333,7 @@ p.song {
 	</ul>
 		<input type="text" id="search" class="w3-input w3-animate-input" style="width:135px"  placeholder="search_text" value="${search_text}" autocomplete="off">
 	
-<nav class="w3-sidenav w3-white w3-card-2 w3-animate-right" style="display:none;right:0; position:fixed; top:0px; right:0px;" id="rightMenu">
+<nav class="w3-sidenav w3-white w3-card-2 w3-animate-right " style="display:none;right:0; position:fixed; top:0px; right:0px;" id="rightMenu">
   <a href="javascript:void(0)" onclick="closeRightMenu()"
   class="w3-closenav  w3-tiny">List▽  Close &times;</a>
   <a href="#">Link 1</a>
@@ -357,7 +360,7 @@ p.song {
 					<td>${k.artist}</td>
 					<td>${k.music_title}</td>
 					<td>${k.music_hit}</td>
-					<td><input type="checkbox" class="chk" value="${k.music_code}"></td>
+					<td><input type="checkbox" class="chk w3-small" value="${k.music_code}"></td>
 					<td></td>
 				</tr>
 			</c:forEach>

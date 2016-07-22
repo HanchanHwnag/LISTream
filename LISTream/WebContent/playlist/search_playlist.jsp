@@ -6,7 +6,8 @@
 <head>
 <meta charset=UTF-8>
 <title>Insert title here</title>
-<link href="http://www.w3schools.com/lib/w3.css" type="text/css" rel="stylesheet">
+<!-- <link href="http://www.w3schools.com/lib/w3.css" type="text/css" rel="stylesheet"> -->
+<link rel="stylesheet" href="w3.css">
 <style type="text/css">
 ul {
 	list-style: none;
@@ -21,6 +22,7 @@ li.paging {
 
 li:HOVER {
 	background-color: lightblue;
+	cursor:pointer;
 }
 
 #search_div {
@@ -44,11 +46,11 @@ td.playlist_detail:hover {
 	background-color: lightblue;
 }
 
-ul#theme {
+/* ul#theme {
 	padding: 10px;
 	width: 580px;
 	background-color: #333333;
-}
+} */
 
 li.theme {
 	color: white;
@@ -319,12 +321,12 @@ p.song {
 </script>
 </head>
 <body>
-	<ul id="theme"></ul>
+	<ul class="w3-navbar w3-black" id="theme"></ul>
 	<div id="sidebar">
 		<div id="fixedbar"></div>
 	</div>
 	<c:if test="${!empty list}">
-		<table class="music_list" style="text-align: center">
+		<table class="music_list w3-table w3-bordered w3-striped w3-border" style="text-align: center">
 			<tr>
 				<th>순번</th>
 				<th>제목</th>
@@ -345,13 +347,13 @@ p.song {
 				</tr>
 			</c:forEach>
 			<tr>
-				<td colspan="4">
+				<td colspan="6">
 					<ul>
 						<c:if test="${page.beginPage <= page.pagePerBlock}">
-							<input type="button" value="이전으로" disabled="disabled" />
+							<input type="button" class="w3-btn w3-small" value="이전으로" disabled="disabled" />
 						</c:if>
 						<c:if test="${page.beginPage > page.pagePerBlock}">
-							<input type="button" value="이전으로"
+							<input type="button" class="w3-btn w3-small" value="이전으로"
 								onclick="sendPage(${page.beginPage - page.pagePerBlock})" />
 						</c:if>
 
@@ -366,10 +368,10 @@ p.song {
 						</c:forEach>
 
 						<c:if test="${page.endPage == page.totalPage}">
-							<input type="button" value="다음으로" disabled="disabled" />
+							<input type="button" class="w3-btn w3-small" value="다음으로" disabled="disabled" />
 						</c:if>
 						<c:if test="${page.endPage != page.totalPage}">
-							<input type="button" value="다음으로"
+							<input type="button" class="w3-btn w3-small" value="다음으로"
 								onclick="sendPage(${page.beginPage + page.pagePerBlock})" />
 						</c:if>
 					</ul>
@@ -379,7 +381,7 @@ p.song {
 	</c:if>
 	<div id="music_detail"></div>
 	<div id="menu">
-		<h1>댓글</h1>
+		<h1>Reply</h1>
 		<div class="close"></div>
 		<div id="ans_write">
 			<table>

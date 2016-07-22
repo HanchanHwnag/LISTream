@@ -84,11 +84,11 @@
 				        <input type="password" name="pwd" placeholder="Password"> 
 				    </p>
 				    <p class="clearfix">
-                        <input type="button" value="Register" onclick="register(this.form)">
-				    </p>
-				    <p class="clearfix">
 				        <input type="button" value="Sign in" onclick="login(this.form)">
-				    </p>       
+				    </p>     
+				    <p class="clearfix">
+                        <input type="button" value="Register" onclick="register(this.form)">
+				    </p> 
 				</form>​
 			</section>
         </div>
