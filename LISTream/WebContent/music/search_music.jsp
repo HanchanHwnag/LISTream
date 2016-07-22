@@ -140,7 +140,7 @@ p.song {
 				});
 				
 				$("li.paging").each(function(){
-					$(this).children("a").attr("href","search_music_view.do?cPage=" + 
+					$(this).parent("a").attr("href","search_music_view.do?cPage=" + 
 							$(this).val() + "&search_text=" + $("#search").text() + "&type=" + 
 							$("#type").val() + "&genre=" + $(".active").val());
 				});
@@ -374,10 +374,10 @@ p.song {
 
 						<c:forEach var="k" step="1" begin="${page.beginPage}" end="${page.endPage}">
 							<c:if test="${k == page.nowPage}">
-								<li class="paging nowPage" value="${k}"><a>${k}</a></li>
+								<a><li class="paging nowPage" value="${k}">${k}</li></a>
 							</c:if>
 							<c:if test="${k != page.nowPage}">
-								<li class="paging" value="${k}"><a>${k}</a></li>
+								<a><li class="paging" value="${k}">${k}</li></a>
 							</c:if>
 						</c:forEach>
 

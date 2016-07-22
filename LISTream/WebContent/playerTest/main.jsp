@@ -505,8 +505,8 @@ iframe {
   class="w3-closenav w3-large">Close &times;</a>
   <a  href="../music/search_music.jsp" target="frame" onclick="w3_close()">Music Search</a>
   <a href="../mymusic/mymusic.jsp" target="frame" onclick="w3_close()">My Music</a>
-  <a href="searchPlayListView.do" target="frame">Playlist View</a>
-  <a href="favorite.do" target="frame">fallow list</a>
+  <a href="searchPlayListView.do" target="frame" onclick="w3_close()">Playlist View</a>
+  <a href="favorite.do" target="frame" onclick="w3_close()">follow list</a>
 </nav>
 
 <header class="w3-container w3-teal">

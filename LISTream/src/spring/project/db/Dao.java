@@ -203,4 +203,17 @@ public class Dao {
 	}
 	
 	
+	// Reply 뽑아오기
+		public List<ReplyVO> selectReply(Map<String, String> map){
+			return template.selectList("selectReply", map);
+		}
+		// Reply 삽입
+		public void insertReply(Map<String, String> map){
+			template.insert("insertReply", map);
+		}
+		// Reply 삭제
+		public void deleteReply(Map<String, String> map){
+			template.delete("deleteReply", map);
+		}
+	
 }

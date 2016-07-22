@@ -279,4 +279,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       		(select * from music where music_code in 
       			(select music_code from musiclist where playlist_code = #{playlist_code})) a
 	</select>
+	
+	<!-- 댓글 검색 -->
+	<select id="selectReply" parameterType="Map" resultType="spring.project.db.ReplyVO">
+		select user_info.id, reply_code, content, reply.regdate from reply, user_info where reply.playlist_code = #{playlist_code} and reply.user_info_code = user_info.user_info_code order by reply.regdate desc
+	</select>
+	<!-- 댓글 삽입 -->
+	<insert id="insertReply" parameterType="Map">
+		insert into reply values(reply_seq.nextval, #{content}, sysdate, #{user_info_code}, #{playlist_code})
+	</insert>
+	<!-- 댓글 삭제 -->
+	<delete id="deleteReply" parameterType="Map">
+		delete from reply where reply_code = #{reply_code}
+	</delete>
 </mapper>

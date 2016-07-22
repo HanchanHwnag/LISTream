@@ -51,6 +51,7 @@ import spring.project.db.GenreVO;
 import spring.project.db.MusicVO;
 import spring.project.db.Page;
 import spring.project.db.PlayListVO;
+import spring.project.db.ReplyVO;
 import spring.project.db.ThemeVO;
 import spring.project.db.UserVO;
 
@@ -694,7 +695,6 @@ public class Controller {
 			page.setTotalRecord(dao.getFavoriteCount(session_code));
 		
 			
-			page.setNumPerPage(3);
 			page.setTotalPage();
 			page.setBegin((page.getNowPage()-1)*page.getNumPerPage() + 1);
 			page.setEnd(page.getBegin() + page.getNumPerPage() - 1);
@@ -862,5 +862,75 @@ public class Controller {
 			
 			ModelAndView mv = new ModelAndView(url);
 			return mv;
+		}
+		/* 댓글 검색 */
+		@RequestMapping(value={"login/reply.do", "playlist/reply.do", "playerTest/reply.do"})
+		public ModelAndView selectReply(HttpServletRequest request, @RequestParam(value="playlist_code", required=true) String playlist_code) throws Exception{
+			request.setCharacterEncoding("utf-8");
+			ModelAndView mv = new ModelAndView("playlist/reply_list");
+			
+			Map<String, String> map = new HashMap<>();
+			map.put("playlist_code", playlist_code);
+
+			mv.addObject("result", reply_body(map));
+			
+			return mv;
+		}
+		
+		@RequestMapping(value={"playlist/reply_write.do", "login/reply_write.do", "playerTest/reply_write.do"})
+		public ModelAndView insertReply(HttpServletRequest request) throws Exception{
+			request.setCharacterEncoding("utf-8");
+			ModelAndView mv = new ModelAndView("playlist/reply_list");
+			
+			Map<String, String> map = new HashMap<>();
+			String content = request.getParameter("content");
+			String playlist_code = request.getParameter("playlist_code"); 
+			
+			System.out.println(content);
+
+			map.put("content", content);
+			map.put("playlist_code", playlist_code);
+			// 임의
+			map.put("user_info_code", session_code);
+			dao.insertReply(map);
+			
+			mv.addObject("result", reply_body(map));
+			
+			return mv;
+		}
+		
+		@RequestMapping(value={"login/reply_delete.do", "playlist/reply_delete.do"})
+		public ModelAndView deleteReply(HttpServletRequest request) throws Exception {
+			request.setCharacterEncoding("utf-8");
+			ModelAndView mv = new ModelAndView("playlist/reply_list");
+			
+			String reply_code = request.getParameter("reply_code");
+			String playlist_code = request.getParameter("playlist_code");
+			Map<String, String> map = new HashMap<>();
+			
+			map.put("reply_code", reply_code);
+			map.put("playlist_code", playlist_code);
+			dao.deleteReply(map);
+			
+			mv.addObject("result", reply_body(map));
+			
+			return mv;
+		}
+		
+		public String reply_body(Map<String, String> map){
+			List<ReplyVO> list = dao.selectReply(map);
+			String result = "[";
+			
+			ReplyVO rvo;
+			for(int i=0; i<list.size(); i++){
+				rvo = list.get(i);
+				result += "{\"id\" : \"" + rvo.getId() + "\",";
+				result += "\"reply_code\" : \"" + rvo.getReply_code() + "\",";
+				result += "\"content\" : \"" + rvo.getContent() + "\"}";
+				if(i != list.size()-1)
+					result += ",";
+			}
+			result += "]";
+			return result;
 		}
 }

@@ -6,6 +6,7 @@
 <head>
 <meta charset=UTF-8>
 <title>Insert title here</title>
+<link href="http://www.w3schools.com/lib/w3.css" type="text/css" rel="stylesheet">
 <style type="text/css">
 ul {
 	list-style: none;
@@ -28,14 +29,19 @@ li:HOVER {
 	width: 420px;
 }
 
-table {
+table.music_list, table.music_table {
 	width: 580px;
 	word-break: break-all;
 	height: auto;
 }
 
-th {
+table.music_list th, table.music_table th {
 	min-width: 50px;
+}
+
+td.playlist_detail:hover {
+	cursor: pointer;
+	background-color: lightblue;
 }
 
 ul#theme {
@@ -73,8 +79,8 @@ a {
 }
 
 #fixedbar {
-	width:300px;
-	padding:10px;
+	width: 300px;
+	padding: 10px;
 	background-color: #666666;
 	position: absolute;
 	visibility: hidden;
@@ -85,7 +91,7 @@ a {
 
 #sidebar {
 	position: relative;
-	left:  650px;
+	left: 650px;
 }
 
 p.song {
@@ -93,6 +99,42 @@ p.song {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+</style>
+<style>
+#menu {
+	width: 330px;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	right: -332px;
+	z-index: 10;
+	border: 1px solid #c9c9c9;
+	background-color: white;
+	text-align: center;
+	transition: All 0.2s ease;
+	-webkit-transition: All 0.2s ease;
+	-moz-transition: All 0.2s ease;
+	-o-transition: All 0.2s ease;
+}
+
+#menu.open {
+	right: 0px;
+}
+
+.close {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	z-index: 1;
+	background-image:
+		url("http://s1.daumcdn.net/cfs.tistory/custom/blog/204/2048858/skin/images/close.png");
+	background-size: 50%;
+	background-repeat: no-repeat;
+	background-position: center;
+	cursor: pointer;
 }
 </style>
 <script type="text/javascript" src="../js/jquery-3.0.0.js"></script>
@@ -124,7 +166,7 @@ p.song {
 				});
 			},
 			error : function(request,status,error){
-				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				
 		    }
 		});
 		
@@ -138,7 +180,6 @@ p.song {
 	           $(".chk").prop("checked", false);
 	        }
 	     });
-	     
 	     
 	     $("#put").on("click", function(){
 	     	var chk = false;
@@ -164,12 +205,13 @@ p.song {
 					alert("즐겨찾기에 추가되었습니다.");
 				},
 				error : function(request,status,error){
-					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					
 			    }
 			});
 	     });
 	     
-	     // 상세보기(플레이리스트 내용)
+	     var id;
+	     // 상세보기(플레이리스트 내용) // 댓글 가져오기
 	     $(".playlist_detail").each(function(){
 	    	$(this).on("click", function(){
 	    		$.ajax({
@@ -196,11 +238,83 @@ p.song {
 	    				}
 	    			},
 	    			error : function(request,status,error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+						
 				    }
 	    		});
+	    		
+	    		$("#menu").addClass("open");
+				id = $(this).attr("title");
+					
+				$.ajax({
+					url : "reply.do",
+					type : "post",
+					dataType : "json",
+					data : {"playlist_code" : $(this).attr("title")},
+					success : function(data){
+						reply(data);
+					}, 
+					error : function(request,status,error){
+						
+					}
+				});
 	    	});
 	     });
+			
+		// 댓글 창 닫기
+		$(".close").click(function() {
+			 $("#menu").removeClass("open");
+		});
+			
+		// 댓글 쓰기
+		$("#write").click(function(){
+			$.ajax({
+				url : "reply_write.do",
+				type : "post",
+				dataType : "json",
+				data : {"playlist_code" : id, "pwd" : $("#pwd").val(), 
+						"content" : $("#content").val()},
+				success : function(data){
+					$("#content").val("");
+					reply(data);
+				}, 
+				error : function(request,status,error){
+					
+				}
+			});
+		});
+			
+		// 댓글 몸체
+		function reply(data){
+			$("#reply_content").empty();
+			for(var i=0; i<data.length; i++){
+				$("<tr>").attr("id", i + "reply").appendTo($("#reply_content"));					
+				$("<td>").text(data[i]["id"]).appendTo($("#" + i + "reply"));
+				$("<td>").text(data[i]["content"]).appendTo($("#" + i + "reply"));
+				if(data[i]["id"] == "${login_vo.id}"){
+					var temp_data = $("<td>");
+					temp_data.appendTo($("#" + i + "reply"));
+					$("<input>").attr("class", "del").attr("name", data[i]["reply_code"]).attr("type", "button").val("삭제").appendTo(temp_data);
+				}
+					
+				$("input.del").each(function(){
+					$(this).on("click", function(){
+						$.ajax({
+							url : "reply_delete.do",
+							type : "post",
+							dataType : "json",
+							data : {"reply_code" : $(this).attr("name"),
+									"playlist_code" : id },
+							success : function(data){
+								reply(data);
+							},
+							error : function(request,status,error){
+								
+						    }
+						});
+					});
+				});
+			}
+		}
 	});
 </script>
 </head>
@@ -210,7 +324,7 @@ p.song {
 		<div id="fixedbar"></div>
 	</div>
 	<c:if test="${!empty list}">
-		<table style="text-align: center">
+		<table class="music_list" style="text-align: center">
 			<tr>
 				<th>순번</th>
 				<th>제목</th>
@@ -225,7 +339,8 @@ p.song {
 					<td class="playlist_detail" title="${k.playlist_code}">${k.playlist_title}</td>
 					<td>${k.regdate.substring(0,10)}</td>
 					<td>${k.hit}</td>
-					<td><input type="checkbox" class="chk" value="${k.playlist_code}"></td>
+					<td><input type="checkbox" class="chk"
+						value="${k.playlist_code}"></td>
 					<td></td>
 				</tr>
 			</c:forEach>
@@ -240,7 +355,8 @@ p.song {
 								onclick="sendPage(${page.beginPage - page.pagePerBlock})" />
 						</c:if>
 
-						<c:forEach var="k" step="1" begin="${page.beginPage}" end="${page.endPage}">
+						<c:forEach var="k" step="1" begin="${page.beginPage}"
+							end="${page.endPage}">
 							<c:if test="${k == page.nowPage}">
 								<li class="paging nowPage" value="${k}"><a>${k}</a></li>
 							</c:if>
@@ -262,5 +378,36 @@ p.song {
 		</table>
 	</c:if>
 	<div id="music_detail"></div>
+	<div id="menu">
+		<h1>댓글</h1>
+		<div class="close"></div>
+		<div id="ans_write">
+			<table>
+				<tr>
+					<th>Content</th>
+					<td><textarea style="margin-left: 10px" id="content"
+							placeholder="Content" style="width:80%" rows="3"></textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2"><input id="write" type="button" value="Write"
+						style="width: 100%"></td>
+				</tr>
+			</table>
+		</div>
+		<div style="overflow:auto; max-height:70%">
+			<table class="w3-table w3-tiny w3-striped w3-bordered w3-border">
+				<thead>
+					<tr style="width: 100%">
+						<th style="width: 30%">작성자</th>
+						<th style="width: 60%">내용</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="reply_content">
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
 </body>
 </html>
