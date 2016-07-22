@@ -46,6 +46,7 @@ import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import spring.project.db.Dao;
+import spring.project.db.FavoriteVO;
 import spring.project.db.GenreVO;
 import spring.project.db.MusicVO;
 import spring.project.db.Page;
@@ -519,15 +520,18 @@ public class Controller {
 		
 		
 
-		@RequestMapping("/mymusic/musiclist.do")	
-		public ModelAndView getMusicList(
-				@RequestParam(value="user_info_code" ,required = true) String user_info_code,
+		@RequestMapping(value={"/mymusic/musiclist.do","/login/getMusiclist.do","/playerTest/getMusiclist.do"})	
+		public ModelAndView getMusicList(				
 				@RequestParam(value="playlist_code") String playlist_code){
 			
 		
 			Map<String,String> map = new HashMap<>();
-			map.put("user_info_code", user_info_code);
+		/*	map.put("user_info_code", user_info_code);*/
+			map.put("user_info_code", session_code);
 			map.put("playlist_code", playlist_code);
+			
+		
+			
 			List<MusicVO> list=dao.getMusicList(map);		
 			String musiclist="<musiclist>";		
 			for (MusicVO k : list) {
@@ -567,7 +571,8 @@ public class Controller {
 		public String makePlaylist(String playlist_title, String theme_code,String user_info_code){
 			
 			
-			int result=dao.makePlaylist(user_info_code, playlist_title,theme_code);
+			/*int result=dao.makePlaylist(user_info_code, playlist_title,theme_code);*/
+			int result=dao.makePlaylist(session_code, playlist_title,theme_code);
 			String result1=String.valueOf(result);
 			
 			return result1;
@@ -580,7 +585,8 @@ public class Controller {
 		
 			Map<String,String> map = new HashMap<>();
 			map.put("playlist_code", playlist_code);
-			map.put("user_info_code", user_info_code);
+			/*map.put("user_info_code", user_info_code);*/
+			map.put("user_info_code", session_code);
 			int result=dao.deletePlaylist(map);
 			String result1=String.valueOf(result);
 			return result1;
@@ -673,4 +679,188 @@ public class Controller {
 			return mv;
 		}	
 		
+		//favorite
+		
+
+		@RequestMapping(value={"/playerTest/favorite.do","/favorite/favorite.do"})
+		public ModelAndView getFavorite(
+				@RequestParam(value="user_info_code",required=false,defaultValue="2") String user_info_code,
+				@RequestParam(value="cPage", required=false,defaultValue="1") String cPage){
+			
+			Map<String, String> map = new HashMap<>();
+		
+			
+			page.setNowPage(Integer.parseInt(cPage));		
+			page.setTotalRecord(dao.getFavoriteCount(session_code));
+		
+			
+			page.setNumPerPage(3);
+			page.setTotalPage();
+			page.setBegin((page.getNowPage()-1)*page.getNumPerPage() + 1);
+			page.setEnd(page.getBegin() + page.getNumPerPage() - 1);
+			if(page.getEnd() > page.getTotalRecord())
+				page.setEnd(page.getTotalRecord());
+			
+			page.setBeginPage((page.getNowPage()-1)/page.getPagePerBlock()*page.getPagePerBlock() + 1);
+			page.setEndPage(page.getBeginPage() + page.getPagePerBlock() - 1);
+			if(page.getEndPage() > page.getTotalPage())
+				page.setEndPage(page.getTotalPage());	
+			
+			map.put("user_info_code", session_code);
+			map.put("begin", String.valueOf(page.getBegin()));
+			map.put("end", String.valueOf(page.getEnd()));
+
+			List<FavoriteVO> list=dao.getFavorite(map);
+			/*
+			for (FavoriteVO k : list) {
+				System.out.println(k.getFavorite_code());
+				System.out.println(k.getName());
+				System.out.println(k.getPlaylist_code());
+				System.out.println(k.getR_num());
+				System.out.println(k.getUser_info_code());
+			}	
+		 	*/
+			
+			ModelAndView mv = new ModelAndView("favorite/favorite");
+			mv.addObject("favorite",list);
+			mv.addObject("page",page);
+			return mv;
+			
+		}
+
+		/* ---------------------------PLAYLIST SEARCH------------------------------ */
+		// THEME
+		@RequestMapping(value={"playlist/theme.do", "login/theme.do","playerTest/theme.do"})
+		public ModelAndView theme_ok(){
+			ModelAndView mv = new ModelAndView("playlist/theme_list");
+			
+			List<ThemeVO> theme = dao.selectTheme();
+			
+			String result = "[";
+			
+			int idx = 0;
+			for(ThemeVO tvo : theme){
+				idx ++;
+				result += "{\"theme_code\" : \"" + tvo.getTheme_code() + "\",";
+				result += "\"theme_name\" : \"" + tvo.getTheme_name() + "\"}";
+				
+				if(idx != theme.size())
+					result += ",";
+			}
+			
+			result += "]";
+			
+			mv.addObject("result", result);
+			return mv;
+		}
+		
+		@RequestMapping(value={"playlist/searchPlayListView.do", "login/searchPlayListView.do","playerTest/searchPlayListView.do"})
+		public ModelAndView searchPlayList(@RequestParam(value="theme",required=false,defaultValue="0") String theme,
+											@RequestParam(value="cPage",required=false,defaultValue="1") String cPage){
+			ModelAndView mv = new ModelAndView("playlist/search_playlist");
+			
+			page.setNowPage(Integer.parseInt(cPage));
+			System.out.println(cPage);
+
+			Map<String, String> map = new HashMap<>();
+			map.put("theme_code", theme);
+			
+			int totalRecord = dao.selectPlayListByThemeTotalCount(map);
+			
+			page.setTotalRecord(totalRecord);
+			page.setTotalPage();
+			
+			page.setBegin((page.getNowPage()-1)*page.getNumPerPage() + 1);
+			page.setEnd(page.getBegin() + page.getNumPerPage() - 1);
+			if(page.getEnd() > page.getTotalRecord())
+				page.setEnd(page.getTotalRecord());
+			
+			page.setBeginPage((page.getNowPage()-1)/page.getPagePerBlock()*page.getPagePerBlock() + 1);
+			page.setEndPage(page.getBeginPage() + page.getPagePerBlock() - 1);
+			if(page.getEndPage() > page.getTotalPage())
+				page.setEndPage(page.getTotalPage());
+			
+			map.put("begin", String.valueOf(page.getBegin()));
+			map.put("end", String.valueOf(page.getEnd()));
+			
+			List<PlayListVO> list = dao.selectPlayListByTheme(map);
+			mv.addObject("theme", theme);
+			mv.addObject("page", page);
+			mv.addObject("list", list);
+			
+			return mv;
+		}
+		// 즐겨찾기에 추가
+		@RequestMapping(value={"playlist/favorite_insert.do","login/favorite_insert.do","playerTest/favorite_insert.do"})
+		@ResponseBody
+		public String favorite_insert(HttpServletRequest request){
+			String[] playlist_codes = request.getParameterValues("arr_checked[]");
+			String result = "success";
+
+			Map<String, String> map = new HashMap<>();
+			for(int i=0; i<playlist_codes.length; i++){
+				map.put("playlist_code", playlist_codes[i]);
+				map.put("user_info_code", session_code);
+				
+				dao.insertPlayListInFavorite(map);
+			}
+
+			return result;
+		}
+		
+		// 플레이리스트 상세내용
+		@RequestMapping(value={"playlist/playlist_detail.do", "login/playlist_detail.do","playerTest/playlist_detail.do"})
+		public ModelAndView playlist_detail(@RequestParam(value="playlist_code", required=true) String playlist_code) {
+			ModelAndView mv = new ModelAndView("playlist/playlist_detail");
+			
+			Map<String, String> map = new HashMap<>();
+			map.put("playlist_code", playlist_code);
+			
+			List<MusicVO> list = dao.selectPlayListDetail(map);
+			String result = "[";
+			
+			int idx = 0;
+			for(MusicVO mvo : list){
+				idx++;
+				
+				result += "{\"r_num\" : \"" + mvo.getR_num() + "\",";
+				result += "\"artist\" : \"" + mvo.getArtist() + "\",";
+				result += "\"music_title\" : \"" + mvo.getMusic_title() + "\",";
+				result += "\"music_hit\" : \"" + mvo.getMusic_hit() + "\"}";
+				
+				if(idx != list.size())
+					result += ",";
+			}
+			
+			result += "]";
+			mv.addObject("result", result);
+			
+			return mv;
+		}
+		@RequestMapping("/playerTest/deleteFavorite.do")
+		public ModelAndView deleteFavorite(String favorite_code,String cPage){
+			
+			Map<String,String> map =new HashMap<>();
+			map.put("favorite_code", favorite_code);
+			map.put("user_info_code", session_code);
+			
+			
+			dao.deleteFavorite(map);
+			
+			int totalCount=dao.getFavoriteCount(session_code);
+			
+			String res = "null";
+			String url="redirect:/playerTest/favorite.do?cPage=";
+			if (totalCount != 0 && totalCount % page.getNumPerPage() == 0) {
+				res = "true";
+			}
+			if(res.equals("true")){
+				 url+=(Integer.parseInt(cPage)-1);
+			}else{
+				url+=cPage;
+			}
+			
+			ModelAndView mv = new ModelAndView(url);
+			return mv;
+		}
 }

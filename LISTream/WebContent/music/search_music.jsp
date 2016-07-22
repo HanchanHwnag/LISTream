@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset=UTF-8>
+<link rel="stylesheet" href="w3.css">
 <title>Insert title here</title>
 <style type="text/css">
 ul {
@@ -20,29 +21,32 @@ li.paging {
 
 li:HOVER {
 	background-color: lightblue;
+	cursor: pointer;
 }
 
 #search_div {
 	border: 1px solid lightgray;
 	border-top: none;
-	width: 420px;
+	position:absolute;
+	background-color: white;
+	width: 100%;
 }
 
-table {
+/* table {
 	width: 580px;
 	word-break: break-all;
 	height: auto;
-}
+} */
 
-th {
+/* th {
 	min-width: 50px;
-}
+} */
 
-#genre {
+/* #genre {
 	padding: 10px;
 	width: 580px;
 	background-color: #333333;
-}
+} */
 
 .genre_list {
 	color: white;
@@ -52,6 +56,7 @@ th {
 
 .genre_list:HOVER {
 	background-color: #666666;
+	cursor:pointer;
 	color: white;
 }
 
@@ -142,7 +147,7 @@ p.song {
 			},
 			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 			error: function(request,status,error){
-				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				/* alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error); */
 			}
 		});
 		
@@ -209,6 +214,7 @@ p.song {
 						data : {"playlist_code" : "${playlist_code}"},
 						success : function(data){
 							playlist(data);
+							
 						},
 						error : function(request,status,error){
 							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -222,7 +228,13 @@ p.song {
 						dataType : "json",
 						data : {"playlist_code" : $(this).val()},
 						success : function(data){
-							playlist(data);
+							var abc ="<a href='javascript:void(0)' onclick='closeRightMenu()' class='w3-closenav w3-large' >Close &times;</a> ";
+							for(i=0; i<data.length; i++){
+								abc += "<a href='#'>"+ data[i]["music_title"] + "</a>";
+							}
+							$("#rightMenu ").html(abc);
+							openRightMenu();
+							/* playlist(data); */
 						},
 						error : function(request,status,error){
 							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -234,14 +246,14 @@ p.song {
 				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 		    }
 		});
-		
+		function openRightMenu() {
+		    document.getElementById("rightMenu").style.display = "block";
+		}
 		function playlist(data){
 			$("#fixedbar").css("visibility", "visible");
 			$("#fixedbar").empty();
-			
 			$("<h3>").text("SongList").appendTo($("#fixedbar"));
 			$("<hr>").appendTo($("#fixedbar"));
-			
 			for(i=0; i<data.length; i++)
 				$("<p>").attr("class", "song").text(data[i]["music_title"]).appendTo($("#fixedbar"));
 		}
@@ -287,42 +299,57 @@ p.song {
 			});
 		});
 	});
+	
+	function closeRightMenu() {
+	    document.getElementById("rightMenu").style.display = "none";
+	}
 </script>
 </head>
 <body>
-	<ul id="genre"></ul>
-	<input type="text" id="search" size="55" placeholder="search_text"
-		value="${search_text}" autocomplete="off">
-	<select id="type">
-		<c:choose>
-			<c:when test="${type eq 'singer'}">
-				<option value="singer" selected="selected">가수별</option>
-				<option value="title">제목별</option>
-			</c:when>
-			<c:when test="${type eq 'title'}">
-				<option value="singer">가수별</option>
-				<option value="title" selected="selected">제목별</option>
-			</c:when>
-			<c:otherwise>
-				<option value="artist" selected="selected">가수별</option>
-				<option value="music_title">제목별</option>
-			</c:otherwise>
-		</c:choose>
-	</select>
-	<select id="playlist"></select>
-	<div id="sidebar">
-		<div id="fixedbar"></div>
-	</div>
+	<ul id="genre" class="w3-navbar w3-black">
+		<li style="position:fixed; right:300px; top:5px;">
+		<select id="type">
+			<c:choose>
+					<c:when test="${type eq 'singer'}">
+						<option value="singer" selected="selected">가수별</option>
+						<option value="title">제목별</option>
+					</c:when>
+				<c:when test="${type eq 'title'}">
+						<option value="singer">가수별</option>
+						<option value="title" selected="selected">제목별</option>
+				</c:when>
+				<c:otherwise>
+					<option value="artist" selected="selected">가수별</option>
+					<option value="music_title">제목별</option>
+				</c:otherwise>
+				</c:choose>
+			</select>
+		<select id="playlist"></select>			
+		</li>
+	
+	</ul>
+		<input type="text" id="search" class="w3-input w3-animate-input" style="width:135px"  placeholder="search_text" value="${search_text}" autocomplete="off">
+	
+<nav class="w3-sidenav w3-white w3-card-2 w3-animate-right" style="display:none;right:0; position:fixed; top:0px; right:0px;" id="rightMenu">
+  <a href="javascript:void(0)" onclick="closeRightMenu()"
+  class="w3-closenav  w3-tiny">List▽  Close &times;</a>
+  <a href="#">Link 1</a>
+  <a href="#">Link 2</a>
+  <a href="#">Link 3</a>
+  <a href="#">Link 4</a>
+  <a href="#">Link 5</a>
+</nav>
+	
 	<div id="search_div"></div>
 	<c:if test="${!empty list}">
-		<table style="text-align: center">
+		<table class="w3-table w3-tiny" style="text-align: center">
 			<tr>
 				<th>순번</th>
 				<th>아티스트</th>
 				<th>제목</th>
 				<th>조회수</th>
-				<th><input type="button" id="checkall" value="all"></th>
-				<th><input type="button" value="put" id="put"></th>
+				<th><input type="button" class="w3-btn w3-hover-blue-grey w3-tiny" id="checkall" value="all"></th>
+				<th><input type="button" value="↑" class="w3-btn w3-hover-blue-grey w3-tiny" id="put"></th>
 			</tr>
 			<c:forEach var="k" items="${list}">
 				<tr>
@@ -335,13 +362,13 @@ p.song {
 				</tr>
 			</c:forEach>
 			<tr>
-				<td colspan="4">
+				<td colspan="6">
 					<ul>
 						<c:if test="${page.beginPage <= page.pagePerBlock}">
-							<input type="button" value="이전으로" disabled="disabled" />
+							<input class="w3-btn w3-hover-blue-grey w3-tiny" type="button" value="이전으로" disabled="disabled" />
 						</c:if>
 						<c:if test="${page.beginPage > page.pagePerBlock}">
-							<input type="button" value="이전으로"
+							<input class="w3-btn w3-hover-blue-grey w3-tiny" type="button" value="이전으로"
 								onclick="sendPage(${page.beginPage - page.pagePerBlock})" />
 						</c:if>
 
@@ -355,10 +382,10 @@ p.song {
 						</c:forEach>
 
 						<c:if test="${page.endPage == page.totalPage}">
-							<input type="button" value="다음으로" disabled="disabled" />
+							<input class="w3-btn w3-hover-blue-grey w3-tiny" type="button" value="다음으로" disabled="disabled" />
 						</c:if>
 						<c:if test="${page.endPage != page.totalPage}">
-							<input type="button" value="다음으로"
+							<input class="w3-btn w3-hover-blue-grey w3-tiny" type="button" value="다음으로"
 								onclick="sendPage(${page.beginPage + page.pagePerBlock})" />
 						</c:if>
 					</ul>

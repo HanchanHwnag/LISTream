@@ -6,108 +6,73 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="w3.css">
 <title>Insert title here</title>
 <script src="../js/jquery-3.0.0.js"></script>
 <script src="../js/jquery.audioControls.min.js"></script>
 <script type="text/javascript">	
-function getCodeAndPlay(playlist_code){
-	$(document).ready(function() {
-		$.ajax({
-			url: "select_musics_to_play.do",
-			data: {'playlist_code':playlist_code},
-			type: "get",
-			dataType: "html",
-			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-			success: function(data){
-
-				$("#playPause").click();
-				
-				$("#playerDiv2").remove();
-				$("#playerDiv1").html("<div id='playerDiv2'></div>");
-				$("#playerDiv2").html(data);
-				$("#playListContainer").audioControls({
-					autoPlay : true,
-					timer : 'increment',
-					onAudioChange : function(response) {
-						$('.songPlay').text(response.title + ' ...'); //Song title information
-					},
-					onVolumeChange : function(vol) {
-						var obj = $('.volume');
-						if (vol <= 0) {
-							obj.attr('class', 'volume mute');
-						} else if (vol <= 33) {
-							obj.attr('class', 'volume volume1');
-						} else if (vol > 33 && vol <= 66) {
-							obj.attr('class', 'volume volume2');
-						} else if (vol > 66) {
-							obj.attr('class', 'volume volume3');
-						} else {
-							obj.attr('class', 'volume volume1');
-						}
-					}
-				});
-			},
-			error: function(request,status,error){
-				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-			}
+	 $(function(){
+		$("#addMusic").click(function(){
+			var co = "\"32\"";
+			$.ajax({
+				url: "/LISTream/playerTest/select_musics_to_play.do",
+				data: {"playerlist_code":co},
+				type: "post",
+				dataType: "html",
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function(data){
+					$("#playListContainer").html(data);
+				},
+				error: function(request,status,error){
+					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				}
+			});
 		});
-				
-	});
-}
+	}); 
+
 		function show() {
 			document.getElementById("listContainer").classList.toggle("show");
 		}
-function start_go(){
+		
 		$(document).ready(function() {
-			$(function() {
-				var playlist_code = 
-					$.ajax({
-						url: "select_musics_to_play.do",
-						data: {'playlist_code':"3"},
-						type: "get",
-						dataType: "html",
-						contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-						success: function(data){
-							$("#playerDiv2").html(data);
-							$("#playListContainer").audioControls({
-								autoPlay : false,
-								timer : 'increment',
-								onAudioChange : function(response) {
-									$('.songPlay').text(response.title + ' ...'); //Song title information
-								},
-								onVolumeChange : function(vol) {
-									var obj = $('.volume');
-									if (vol <= 0) {
-										obj.attr('class', 'volume mute');
-									} else if (vol <= 33) {
-										obj.attr('class', 'volume volume1');
-									} else if (vol > 33 && vol <= 66) {
-										obj.attr('class', 'volume volume2');
-									} else if (vol > 66) {
-										obj.attr('class', 'volume volume3');
-									} else {
-										obj.attr('class', 'volume volume1');
-									}
-								}
-							});
-						},
-						error: function(request,status,error){
-							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-						}
-					});
-				});
+			$("#playListContainer").audioControls({
+				autoPlay : false,
+				timer : 'increment',
+				onAudioChange : function(response) {
+					$('.songPlay').text(response.title + ' ...'); //Song title information
+				},
+				onVolumeChange : function(vol) {
+					var obj = $('.volume');
+					if (vol <= 0) {
+						obj.attr('class', 'volume mute');
+					} else if (vol <= 33) {
+						obj.attr('class', 'volume volume1');
+					} else if (vol > 33 && vol <= 66) {
+						obj.attr('class', 'volume volume2');
+					} else if (vol > 66) {
+						obj.attr('class', 'volume volume3');
+					} else {
+						obj.attr('class', 'volume volume1');
+					}
+				}
+			});
 			
 		});
-}
-
-function w3_open() {
-    document.getElementById("mySidenav").style.display = "block";
-}
-function w3_close() {
-    document.getElementById("mySidenav").style.display = "none";
-}
-
+		/* $(function() {
+			var co = "\'${login_vo.user_info_code}\'";
+			$.ajax({
+				url: "/LISTream/playerTest/select_musics_to_play.do",
+				data: {"playerlist_code":co},
+				type: "post",
+				dataType: "html",
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function(data){
+					$("#playListContainer").html(data);
+				},
+				error: function(request,status,error){
+					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				}
+			});
+			}); */
 
 </script>
 
@@ -354,7 +319,7 @@ ul, li {
 
 .progress {
 	clear: both;
-	height: 6px;
+	height: 4px;
 	background-color: #666666;
 	width: 100%;
 	cursor: pointer;
@@ -449,10 +414,10 @@ input[type="range"] {
 iframe {
 	border: none;
 	position: fixed;
-	
+	left: 200px;
 	top:100px;
-	width: 100%;
-	height: 90%;
+	width: 80%;
+	height: 80%;
 	z-index: 0;
 }
 
@@ -487,7 +452,6 @@ iframe {
 	margin-left: 20px;
 	background-color: #333333;
 	color: white;
-	
 	border-radius: 10px 10px 10px 10px;
 	
 }
@@ -498,47 +462,68 @@ iframe {
 </style>
 
 </head>
-<body onload="start_go()">
-
-<nav class="w3-sidenav w3-white w3-card-2 w3-animate-right" style="display:none" id="mySidenav">
-  <a href="javascript:void(0)" onclick="w3_close()"
-  class="w3-closenav w3-large">Close &times;</a>
-  <a  href="../music/search_music.jsp" target="frame" onclick="w3_close()">Music Search</a>
-  <a href="../mymusic/mymusic.jsp" target="frame" onclick="w3_close()">My Music</a>
-  <a href="searchPlayListView.do" target="frame">Playlist View</a>
-  <a href="favorite.do" target="frame">fallow list</a>
-</nav>
-
-<header class="w3-container w3-teal">
-  <span class="w3-opennav w3-xlarge" onclick="w3_open()">&#9776;</span>
-  <h1>${login_vo.name } page</h1>
-</header>
-
-	<iframe name="frame" id="frame" src="../music/search_music.jsp"></iframe>
-	<%-- <div class= "headerbar">
+<body >
+	<iframe src="../music/search_music.jsp"></iframe>
+	<div class= "headerbar">
 		<a style="font-size: 30px; padding: 20px;">${login_vo.name } 님 page</a>
 		<div style=" float:right; right:40px;">
 			<a style=" color:white">[개인정보수정]</a> ||
-			<a style="color:white" href="../login/login_form.jsp">[log-out]&nbsp;&nbsp;&nbsp;</a>
+			<a style="color:white">[log-out]&nbsp;&nbsp;&nbsp;</a>
 		</div>
 	</div>
-	
 	<div>
 	<ul class="sidemenu">
 		<li style=" border-top-left-radius: 10px;
-	border-top-right-radius: 10px; color: white;"><p><a href="../music/search_music.jsp" target="frame">검색</a></p></li>
+	border-top-right-radius: 10px; color: white;"><p>검색</p></li>
 		<li><a>장르별</a></li>
-		<li id="myMusic"><a href="../mymusic/mymusic.jsp" target="frame">내 노래</a></li>
+		<li><a></a></li>
 		<li><button>2</button></li>
 		<li style = "border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;"><button>2</button></li>
 	</ul>
-	</div> --%>
-	
-	<div id="playerDiv1" style="position:fixed; bottom:0px; width:100%;">
-		<div id="playerDiv2">
+	</div>
+	<div id="" class="rb">
+		<div id="listContainer" class="playlistContainer">
+			<ul id="playListContainer">
+				<li data-src="../musics/Zedd - 11 - Stay The Night (Feat. Hayley Williams of Paramore) - 192k.mp3"><a href="#">Stay The Night (Feat. Hayley Williams of Paramore)</a></li>
+				<li data-src="../musics/Afrojack,Shermanology - 02 - Can`t Stop Me (Club Mix) - 192k.mp3"><a href="#">Afrojack,Shermanology - 02 - Can`t Stop Me</a></li>
+			</ul>
+		</div>
+
+		<div class="containerPlayer">
+
+			<div id="playerContainer">
+				<ul class="controls">
+					<div class="audioDetails">
+						<span class="songPlay"></span>
+						<span data-attr="timer" class="audioTime"></span>
+					</div>
+					<li><a href="#" class="shuffle shuffleActive"
+						data-attr="shuffled"></a></li>
+					<li><a href="#" class="left" data-attr="prevAudio"></a></li>
+					<li><a href="#" class="play" data-attr="playPauseAudio"></a></li>
+					<li><a href="#" class="right" data-attr="nextAudio"></a></li>
+					<li><a href="#" class="repeat" data-attr="repeatSong"></a></li>
+					<li style="float: right;"><a class="nowplay" onclick="show()"></a></li>
+					<div class="volumeControl">
+						<div class="volume volume1"></div>
+						<input class="bar" data-attr="rangeVolume" type="range" min="0"
+							max="1" step="0.1" value="0.7" />
+					</div>
+
+				</ul>
+
+				<div class="progress">
+					<div data-attr="seekableTrack" class="seekableTrack"></div>
+					<div class="updateProgress"></div>
+				</div>
+
+			</div>
 		</div>
 	</div>
+	
+		<input type="button" id="addMusic" value="재생">
+		 <p> idx= ${login_vo.user_info_code}</p> 
 	
 </body>
 </html>

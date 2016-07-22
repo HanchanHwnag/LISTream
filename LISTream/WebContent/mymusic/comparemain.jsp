@@ -17,38 +17,6 @@
 	var dfdf="이건테스트변수";
 	
  
-	function delete_selectl(){
-		
-		var musiclist_codes=new Array();
-		var count=0;
-		$(".checkMusic:checked").each(function(){				
-			musiclist_codes.push($(this).attr("id"));
-			count++;
-		});			
-		
-		if(count==0){
-			alert("노래를 선택해주세요");
-			return;
-		}		
-		
-		var check=confirm("선택한 노래를 삭제할까요?");		
-		if(!check){
-			return;
-		}	
-		
-		$.ajax({
-			type:"post",
-			url:"deleteMusiclist.do",
-			data:{"musiclist_codes":musiclist_codes,"playlist_code":playlist_code,"user_info_code":user_info_code},
-			dataType:"text",
-			success:function(data){				
-					getMusiclist(title,playlist_code);					
-			},
-			 error:function(request,status,error){
-			      
-			 }		
-		});	
-	}
 	
 $(function(){
 	getPlaylist();
@@ -281,8 +249,8 @@ function getPlaylist(){
 table {
 	table-layout: fixed;
 	position:fixed;
-	left: 200px;
-	top: 50px;
+	left: 300px;
+	top: 200px;
 	width:600px;
 }
 ul{
@@ -329,8 +297,8 @@ li:hover{
 	
 	<div id="container" >
 		<!-- 플레이리스트목록DVI -->
-		<div id="playlist" style = " " >
-			<ul id="plistul" class=" w3-sidenav  w3-white w3-card-1 w3-tiny" style = "overflow-x: hidden; padding:1px; position:fixed; top:10px; max-height: 500px; overflow-y: scroll;">
+		<div id="playlist" >
+			<ul id="plistul" class="w3-ul w3-sidenav  w3-white w3-card-1 w3-tiny">
 				<li id="makeplaylist2"><a href="#">
  <button onclick="document.getElementById('id01').style.display='block'" id ="makeplaylist" class="w3-btn w3-large">Create List!</button></a></li>			
 			</ul>		
@@ -340,18 +308,16 @@ li:hover{
 		
 		<!--노래목록 DIV  -->
 		<div id="musiclist" >
-			<ul class = "w3-navbar w3-white w3-tiny" id="functionul" style="position:fixed;left:200px; top:10px;">
-				
-				<li class="w3-right functionli " id="playMusic"><a>▶재생</a></li>
-			</ul>					
-			<!-- 	
-				<li class="functionli" id="deleteMusic"><a>ⓧ 노래삭제</a></li>				
 			<p id="dd">노래목록</p>
 			<p id="playlisttitle">플레이리스트제목  </p> 	
-			 -->
+			
 			<p>		
+			<ul id="functionul">
+				<li class="functionli" id="deleteMusic"><p>ⓧ 노래삭제</p></li>
+				<li class="functionli" id="playMusic"><p>▶재생</p></li>
+			</ul>		
 		<p >&nbsp;</p>			
-	 		<div class="" >
+	 		<div class="">
 				<table id="mlist" class="w3-table w3-striped w3-bordered w3-border w3-tiny">
 					<thead>
 						<tr>
@@ -360,14 +326,7 @@ li:hover{
 							<th style="width: 70px">Singer</th>
 							<th style="width: 20px"><input type="checkbox" id="checkAll"/>√</th>
 						</tr>
-					</thead>
-					<tfoot>
-						<tr>
-						<td colspan="4" id="deleteMusic" >
-							<button class="w3-btn w3-white" style="float: right;" onclick = "delete_selectl()">삭제</button>
-						</td>
-						</tr>
-					</tfoot>	
+					</thead>	
 			</table> 
 	 		</div>
 		</div>

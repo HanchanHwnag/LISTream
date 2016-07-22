@@ -1,7 +1,7 @@
 package spring.project.db;
 
 public class PlayListVO {
-	private String playlist_code,user_info_code,id,playlist_title,theme_code,theme_name,hit,regdate;
+	private String playlist_code,user_info_code,id,playlist_title,theme_code,theme_name,hit,regdate,r_num;
 
 	public String getPlaylist_code() {
 		return playlist_code;
@@ -67,6 +67,14 @@ public class PlayListVO {
 
 	public void setRegdate(String regdate) {
 		this.regdate = regdate;
+	}
+
+	public String getR_num() {
+		return r_num;
+	}
+
+	public void setR_num(String r_num) {
+		this.r_num = r_num;
 	}
 	
 	
