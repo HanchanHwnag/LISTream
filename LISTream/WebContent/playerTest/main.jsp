@@ -169,9 +169,10 @@ ul, li {
 /* Playlist */
 #listContainer {
 	float: right;
-	width: 25%;
+	width: 30%;
 	background-color: #fafafa;
 	position: relative;
+	font-size: 10px;
 }
 
 #listContainer ul {
@@ -350,6 +351,7 @@ ul, li {
 
 .nowplay:hover, .nowplay.loopActive {
 	background: url('../images/audio/list_icon_active.png') no-repeat;
+	cursor: pointer:
 }
 
 .progress {
@@ -396,7 +398,7 @@ input[type="range"] {
 	font-size: 12px;
 	padding: 16px;
 	float: left;
-	width: 25%;
+	width: 40%;
 }
 
 .audioTime {
@@ -491,6 +493,12 @@ iframe {
 	border-radius: 10px 10px 10px 10px;
 	
 }
+
+#mySidenav a:HOVER {
+	background-color: white;
+	cursor: pointer;
+	
+}
 /* .headerbar a{
 	padding: 20px;
 }
@@ -500,21 +508,21 @@ iframe {
 </head>
 <body onload="start_go()">
 
-<nav class="w3-sidenav w3-white w3-card-2 w3-animate-right" style="display:none" id="mySidenav">
-  <a href="javascript:void(0)" onclick="w3_close()"
-  class="w3-closenav w3-large">Close &times;</a>
-  <a  href="../music/search_music.jsp" target="frame" onclick="w3_close()">Music Search</a>
-  <a href="../mymusic/mymusic.jsp" target="frame" onclick="w3_close()">My Music</a>
-  <a href="searchPlayListView.do" target="frame" onclick="w3_close()">Playlist View</a>
-  <a href="favorite.do" target="frame" onclick="w3_close()">follow list</a>
+<nav class="w3-navbar w3-light-grey w3-white w3-card-2 w3-animate-right" style=" width: 100%;position:absolute" id="mySidenav">
+ <!--  <a href="javascript:void(0)" onclick="w3_close()"
+  class="w3-closenav w3-large">Close &times;</a> -->
+  <a style="padding-left: 10px;padding-right: 10px" href="../music/search_music.jsp" target="frame" >Music Search</a>
+  <a style="padding-left: 10px;padding-right: 10px" href="../mymusic/mymusic.jsp" target="frame" >My Music</a>
+  <a style="padding-left: 10px;padding-right: 10px" href="searchPlayListView.do" target="frame">Playlist View</a>
+  <a style="padding-left: 10px;padding-right: 10px" href="favorite.do" target="frame">fallow list</a>
 </nav>
 
-<header class="w3-container w3-teal">
-  <span class="w3-opennav w3-xlarge" onclick="w3_open()">&#9776;</span>
-  <h1>${login_vo.name } page</h1>
+<header class="w3-container w3-gray">
+  <!-- <span class="w3-opennav w3-xlarge" onclick="w3_open()">&#9776;</span> -->
+  <a style="position: fixed; top:30px; left: 30px; " class="w3-xlarge">${login_vo.name } &nbsp;page</a>
 </header>
 
-	<iframe name="frame" id="frame" src="../music/search_music.jsp"></iframe>
+	<iframe name="frame" id="frame" src="../mymusic/mymusic.jsp"></iframe>
 	<%-- <div class= "headerbar">
 		<a style="font-size: 30px; padding: 20px;">${login_vo.name } 님 page</a>
 		<div style=" float:right; right:40px;">
