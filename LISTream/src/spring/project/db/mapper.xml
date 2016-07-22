@@ -134,6 +134,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="insertMusicInPlayList" parameterType="java.util.Map">
 		insert into musiclist values(musiclist_seq.nextval,#{music_code},#{playlist_code})
 	</select>
+	<!-- Music추가 시 조회수+1 -->
+	<update id="updateMusicHit" parameterType="Map">
+   		update music set music_hit = music_hit + 1 where music_code = #{music_code}
+	</update>
+	<!-- Music삭제 시 조회수 -1 -->
+	<update id="updateMusicHitMinus" parameterType="Map">
+   		update music set music_hit = music_hit - 1 where music_code = #{musiclist_code}
+	</update>
 	
 	<select id="getPlayList" parameterType="Map" resultType="spring.project.db.PlayListVO">
 			
@@ -237,6 +245,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	<update id="minusHit" parameterType="Map">
 		update playlist set hit = hit-1 where playlist_code=#{playlist_code}
+	</update>
+	
+	<update id="updatePlayListHit" parameterType="Map">
+  		 update playlist set hit = hit + 1 where playlist_code = #{playlist_code}   
 	</update>
 	
 	<!-- PlayList 관련 -->

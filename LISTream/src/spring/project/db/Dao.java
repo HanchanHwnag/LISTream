@@ -102,6 +102,7 @@ public class Dao {
 		// 플레이리스트_음악 삽입
 		public void insertMusicInPlayList(Map<String, String> map){
 			template.insert("insertMusicInPlayList", map);
+			template.update("updateMusicHit", map);
 		}
 	// 음악 전체 리스트 받기
 	public List<MusicVO> selectAllMusic(){
@@ -156,6 +157,7 @@ public class Dao {
 	//뮤직삭제
 	public int deleteMusiclist(Map<String, String> map){
 		int result=template.delete("deleteMusiclist",map);
+		   template.update("updateMusicHitMinus", map);
 		return result;
 	}
 	
@@ -180,6 +182,8 @@ public class Dao {
 		template.update("minusHit", map);
 		
 	}
+	
+	
 	//favorite end
 	
 	/*----------------------------PlayList-----------------------------*/
@@ -197,7 +201,8 @@ public class Dao {
 	}
 	// 즐겨찾기에 플레이리스트 삽입
 	public void insertPlayListInFavorite(Map<String, String> map){
-		template.insert("insertPlayListInFavorite", map);
+	   template.insert("insertPlayListInFavorite", map);
+	   template.update("updatePlayListHit", map);
 	}
 	// 플레이리스트 상세 내용
 	public List<MusicVO> selectPlayListDetail(Map<String, String> map){

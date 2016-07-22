@@ -1,4 +1,3 @@
-
 DROP TABLE favorite CASCADE CONSTRAINTS ;
 
 DROP TABLE genre CASCADE CONSTRAINTS ;
@@ -35,13 +34,13 @@ ALTER TABLE genre ADD CONSTRAINT genre_PK PRIMARY KEY ( genre_code ) ;
 CREATE TABLE music
   (
     music_code  INTEGER NOT NULL ,
-    artist      VARCHAR2 (100) ,
+    artist      VARCHAR2 (255) ,
     music_title VARCHAR2 (255) ,
     path CLOB ,
     music_hit     INTEGER ,
     music_regdate DATE ,
     genre_code    INTEGER NOT NULL ,
-    playtime      VARCHAR2 (100)
+    playtime      VARCHAR2 (255)
   ) ;
 ALTER TABLE music ADD CONSTRAINT music_PK PRIMARY KEY ( music_code ) ;
 
@@ -138,5 +137,18 @@ create sequence musiclist_seq;
 create sequence music_seq;
 create sequence theme_seq;
 create sequence genre_seq;
+
+insert into theme values(theme_seq.nextval,'사랑');
+insert into theme values(theme_seq.nextval,'행복');
+insert into theme values(theme_seq.nextval,'슬픔');
+insert into theme values(theme_seq.nextval,'드라이브');
+
+insert into genre values(0,'전체 보기');
+insert into genre values(genre_seq.nextval,'힙합');
+insert into genre values(genre_seq.nextval,'재즈');
+insert into genre values(genre_seq.nextval,'대중가요');
+insert into genre values(genre_seq.nextval,'일렉');
+
+insert into user_info values(user_info_seq.nextval ,'admin1','1111','1','1');
 
 commit;
