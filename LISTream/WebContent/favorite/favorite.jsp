@@ -88,7 +88,6 @@ function getMusiclist(playlist_code){
 			data:{'playlist_code':playlist_code},
 			dataTypa:"xml",
 			success:function(data){				
-				
 				$("#musiclistbody").remove();					
 		 		var table="<tbody id='musiclistbody' align='center'>";
 				$(data).find("music").each(function(i){					

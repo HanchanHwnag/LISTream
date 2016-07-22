@@ -21,7 +21,7 @@ function getCodeAndPlay(playlist_code){
 			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 			success: function(data){
 
-				$("#playPause").click();
+				$(".playAudio").click();
 				
 				$("#playerDiv2").remove();
 				$("#playerDiv1").html("<div id='playerDiv2'></div>");
