@@ -53,11 +53,10 @@ $(function(){
 			
 		});
 		
-		$(document).on("click",".title",function(){
-			alert(playlist_code);
-			playlist_code=$(this).attr("id");
+		/* $(document).on("click",".title",function(){
+			playlist_code=$(this).attr("title");
 			getMusiclist(playlist_code);
-		});
+		}); */
 		
 		$(document).on("contextmenu",".title", function(e){
 
@@ -87,7 +86,7 @@ function getMusiclist(playlist_code){
 			url:"getMusiclist.do",
 			data:{'playlist_code':playlist_code},
 			dataTypa:"xml",
-			success:function(data){				
+			success:function(data){		
 				$("#musiclistbody").remove();					
 		 		var table="<tbody id='musiclistbody' align='center'>";
 				$(data).find("music").each(function(i){					
@@ -98,7 +97,6 @@ function getMusiclist(playlist_code){
 					table+="<td>"+$(this).find("artist").text() +"</td>";			
 					table+="</tr>";						
 				});		
-				
 				table+="</tbody>";				
 				$("#musiclisttable thead:eq(0)").after(table);			
 			},

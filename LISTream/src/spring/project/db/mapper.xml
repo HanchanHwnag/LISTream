@@ -166,7 +166,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		and ml.music_code = m.music_code 
 		and u.user_info_code=p.user_info_code
 		and ml.playlist_code=#{playlist_code} 
-		and u.user_info_code=#{user_info_code} 
+		<!-- and u.user_info_code=#{user_info_code}  -->
         order by ml.musiclist_code asc
 	</select>
 	
@@ -266,7 +266,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 					         theme_code = #{theme_code}
 					    </if> 
     				</where>
-    			order by hit) a)
+    			order by hit desc) a)
     		) 
 	</select>
 	<!-- PlayList 가져오기 -->
@@ -279,7 +279,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 					         theme_code = #{theme_code}
 					    </if> 
     				</where>
-    			order by hit) a)
+    			order by hit desc) a)
     		) where r_num between #{begin} and #{end}
 	</select>
 	

@@ -64,7 +64,7 @@ function start_go(){
 				var playlist_code = 
 					$.ajax({
 						url: "select_musics_to_play.do",
-						data: {'playlist_code':"3"},
+						data: {'playlist_code':'0'},
 						type: "get",
 						dataType: "html",
 						contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -515,6 +515,7 @@ iframe {
   <a style="padding-left: 10px;padding-right: 10px" href="../mymusic/mymusic.jsp" target="frame" >My Music</a>
   <a style="padding-left: 10px;padding-right: 10px" href="searchPlayListView.do" target="frame">Playlist View</a>
   <a style="padding-left: 10px;padding-right: 10px" href="favorite.do" target="frame">follow list</a>
+  <a style="padding-left: 10px;padding-right: 10px" href="logout.do">logout</a>
 </nav>
 
 <header class="w3-container w3-gray">

@@ -74,7 +74,7 @@
 			</header>
             
 			<section class="main">
-				<form class="form-3">
+				<form class="form-3" method="post">
 				    <p class="clearfix">
 				        <label for="login">Username</label>
 				        <input type="text" name="id" placeholder="Username">

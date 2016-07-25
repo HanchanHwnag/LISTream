@@ -16,6 +16,9 @@
 		window.open("user_list_view.do", "",
 				"width=430, height=500, toolbar=no, scrollbar=yes");
 	}
+	function go_logout(){
+		location.href="logout.do";
+	}
 </script>
 </head>
 <body>
@@ -29,6 +32,7 @@
 			test="${vo.id == 'admin1' || vo.id == 'admin2' || vo.id == 'admin3' || vo.id == 'admin4' || vo.id == 'admin5'}">
 			<input type="button" onclick="go_music_register()" value="음악 등록">
 			<input type="button" onclick="go_manage_user()" value="회원 관리">
+			<input type="button" onclick="go_logout()" value="로그아웃"> 
 		</c:when>
 		<c:otherwise>
 				${login_vo.id } </br>

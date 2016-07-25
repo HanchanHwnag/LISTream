@@ -71,7 +71,7 @@ public class Controller {
 	public void setPage(Page page) { this.page = page; }
 	
 	// 로그인
-	@RequestMapping("login/login.do")
+	@RequestMapping(value={"login/login.do","playerTest/login.do"})
 	public ModelAndView login(UserVO vo) throws Exception{
 
 		boolean flag = false;
@@ -93,6 +93,21 @@ public class Controller {
 			mv.addObject("result", "fail");
 		}
 
+		return mv;
+	}
+	
+	//로그아웃
+	@RequestMapping(value={"login/logout.do","playerTest/logout.do","admin/logout.do"})
+	public ModelAndView logout(HttpSession session){
+		session.invalidate();
+		session_id=null;
+		session_code=null;
+		
+		
+		ModelAndView mv = new ModelAndView("login/login_form");
+		
+		
+		
 		return mv;
 	}
 
@@ -525,7 +540,7 @@ public class Controller {
 		@RequestMapping(value={"/mymusic/musiclist.do","/login/getMusiclist.do","/playerTest/getMusiclist.do"})	
 		public ModelAndView getMusicList(				
 				@RequestParam(value="playlist_code") String playlist_code){
-			
+			System.out.println(playlist_code);
 		
 			Map<String,String> map = new HashMap<>();
 		/*	map.put("user_info_code", user_info_code);*/
@@ -534,7 +549,8 @@ public class Controller {
 			
 		
 			
-			List<MusicVO> list=dao.getMusicList(map);		
+			List<MusicVO> list=dao.getMusicList(map);
+			System.out.println(list.size());
 			String musiclist="<musiclist>";		
 			for (MusicVO k : list) {
 				musiclist+="<music>";			
