@@ -159,7 +159,7 @@ public class Controller {
 		List<MusicVO> musicList = dao.selectAllMusic();
 
 		request.setCharacterEncoding("utf-8");
-		final String filePath = request.getServletContext().getRealPath("/upload/");
+		final String filePath = request.getServletContext().getRealPath("/musics/");
 		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
 		List<MultipartFile> multiList =multipartHttpServletRequest.getFiles("files[]");
 

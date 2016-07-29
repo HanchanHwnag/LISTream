@@ -101,8 +101,6 @@ function getMusiclist(playlist_code){
 				$("#musiclisttable thead:eq(0)").after(table);			
 			},
 			error:function(){
-				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-	
 			}			
 		});//ajax
 }//getMusiclist	

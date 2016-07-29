@@ -239,7 +239,6 @@ function getMusiclist(title,playlist_code){
 			
 		},
 		error:function(){
-			alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
  
 		}			
 	});//ajax 		
@@ -342,7 +341,7 @@ li:hover{
 		<div id="musiclist" >
 			<ul class = "w3-navbar w3-white w3-tiny" id="functionul" style="position:fixed;left:200px; top:10px;">
 				
-				<li class="w3-right functionli " id="playMusic"><a>▶재생</a></li>
+				<li class="w3-right w3-black functionli " id="playMusic" style="border : 1px;"><a>▶재생</a></li>
 			</ul>					
 			<!-- 	
 				<li class="functionli" id="deleteMusic"><a>ⓧ 노래삭제</a></li>				
